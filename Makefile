@@ -20,6 +20,9 @@ all:
 2015_5: ./2015/day5.cpp
 	$(GXX) $(CFLAGS) -o buildoutput/d20155.out ./2015/day5.cpp
 
+2015_19: ./2015/day19.cpp
+	$(GXX) $(CFLAGS) -o buildoutput/d201519.out ./2015/day19.cpp
+
 clean: 
 	rm ./buildoutput/*
 

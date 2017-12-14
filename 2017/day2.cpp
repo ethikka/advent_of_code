@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <chrono>
 
-int main() {
+void solve() {
   std::string str;
   int resa = 0;
   int resb = 0;
@@ -42,3 +43,12 @@ int main() {
   }
   std::cout << "Result part 1: " << resa << std::endl << "Result part 2: " << resb << std::endl;
 }
+
+int main(void) {
+  auto start_time = std::chrono::high_resolution_clock::now();
+  solve();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+  std::cout << "Ran for " << ms_count << "ms" << std::endl;
+}
+

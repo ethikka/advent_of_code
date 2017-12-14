@@ -1,8 +1,10 @@
+
 #include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include <map>
+#include <chrono>
 
 std::map<int,int> scanners;
 
@@ -22,7 +24,7 @@ int calc_penalty(int delay) {
   return penalty;
 }
 
-int main(void) {
+void solve(void) {
   std::string line;
   while (std::getline(std::cin, line)) {
     int scanner_index, scannerlength;
@@ -41,3 +43,12 @@ int main(void) {
   }
   std::cout << "Solution part 1: " << penalty_part_1 << std::endl << "Solution part 2: " << delay << std::endl;
 }
+
+int main(void) {
+  auto start_time = std::chrono::high_resolution_clock::now();
+  solve();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+  std::cout << "Ran for " << ms_count << "ms" << std::endl;
+}
+

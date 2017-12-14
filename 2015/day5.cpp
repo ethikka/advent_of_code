@@ -6,8 +6,9 @@
 #include <fstream>
 #include <algorithm>
 #include <map>
+#include <chrono>
 
-int main() {
+void solve(void) {
   std::vector<std::string> input { std::istream_iterator<std::string> { std::cin }, {}};
   int nice_strings = 0;
   int nicer_strings = 0;
@@ -28,7 +29,7 @@ int main() {
         vowelcount++;
     }
     if (stillnice && (vowelcount >= 3) && doubleletter) {
-     nice_strings++;
+      nice_strings++;
     }
 
     // part two!
@@ -45,9 +46,9 @@ int main() {
         else
           if (i - pairs[pair] >= 2)
             doubler = true;
-     }
-     if (i > 0)
-       repeater |= (line[i-1] == line[i+1]);
+      }
+      if (i > 0)
+        repeater |= (line[i-1] == line[i+1]);
     }
     if (doubler && repeater)
       nicer_strings++;
@@ -55,3 +56,12 @@ int main() {
   std::cout << "A thick book containing " << nice_strings << " nice strings for nice things" << std::endl;
   std::cout << "And an addendum with extra joy, and also " << nicer_strings << " even nicer strings" << std::endl; 
 }
+
+int main(void) {
+  auto start_time = std::chrono::high_resolution_clock::now();
+  solve();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+  std::cout << "Ran for " << ms_count << "ms" << std::endl;
+}
+

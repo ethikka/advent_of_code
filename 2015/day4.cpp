@@ -3,8 +3,9 @@
 #include <vector>
 #include <iterator>
 #include "md5.h"
+#include <chrono>
 
-int main() {
+void solve(void) {
   // md5(std::string)
   std::string secret;
   getline(std::cin, secret);
@@ -21,3 +22,12 @@ int main() {
 
   std::cout << "AdventCoins everywhere, but mostly at " << sol_a << " (solution a) and " << num << " (solution b)" << std::endl;
 }
+
+int main(void) {
+  auto start_time = std::chrono::high_resolution_clock::now();
+  solve();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+  std::cout << "Ran for " << ms_count << "ms" << std::endl;
+}
+

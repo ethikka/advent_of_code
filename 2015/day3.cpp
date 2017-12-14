@@ -3,8 +3,9 @@
 #include <vector>
 #include <iterator>
 #include <map>
+#include <chrono>
 
-int main() {
+void solve(void) {
   std::vector<char> input { std::istream_iterator<char>{ std::cin }, {}};
   int x = 0, y = 0, rx = 0, ry = 0;
   bool realsanta = true;
@@ -22,8 +23,14 @@ int main() {
     roadmap[k]++;
     realsanta = !realsanta;
   }
-  for(auto& i: roadmap) {
-    std::cout << i.first.first << ":" << i.first.second << " => " << i.second << std::endl;
-  }
   std::cout << "Santa (and RoboSanta =) delivered presents to  " << roadmap.size() << " houses" << std::endl;
 }
+
+int main(void) {
+  auto start_time = std::chrono::high_resolution_clock::now();
+  solve();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+  std::cout << "Ran for " << ms_count << "ms" << std::endl;
+}
+

@@ -38,8 +38,8 @@ all:
 2017_5: ./2017/day5.cpp
 	$(GXX) $(CFLAGS) -o buildoutput/d20175.out ./2017/day5.cpp
 
-#2017_6: ./2017/day6.cpp
-#	$(GXX) $(CFLAGS) -o buildoutput/d20176.out ./2017/day6.cpp
+2017_6: ./2017/day6.cpp
+	$(GXX) $(CFLAGS) -o buildoutput/d20176.out ./2017/day6.cpp
 
 2017_7: ./2017/day7.cpp
 	$(GXX) $(CFLAGS) -o buildoutput/d20177.out ./2017/day7.cpp

@@ -5,8 +5,9 @@
 #include <iterator>
 #include <fstream>
 #include <algorithm>
+#include <chrono>
 
-int main() {
+void solve(void) {
   std::vector<std::string> input { std::istream_iterator<std::string> { std::cin }, {}};
   int footage = 0;
   int ribbon = 0;
@@ -23,8 +24,16 @@ int main() {
       std::cout << w << ":" << h << ":" << l << ":" << x << ":" << y << ":" << z << std::endl; 
     footage += ((2 * x * y) + (2 * y * z) + (2 * z * x)) + (x * y);
     ribbon += ((2 * x) + (2 * y) + (x * y * z));
-    std::cout << "##" << footage << ":" << ribbon << std::endl;
   }
   std::cout << "Elves need " << footage << " square feet of wrapping paper" << std::endl;
   std::cout << "They'll also need " << ribbon << " feet of ribbon" << std::endl;
 }
+
+int main(void) {
+  auto start_time = std::chrono::high_resolution_clock::now();
+  solve();
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
+  std::cout << "Ran for " << ms_count << "ms" << std::endl;
+}
+

@@ -1,9 +1,16 @@
 #include <iostream>
 #include <sstream>
+#include <sstream>
+#include <iostream>
+#include <string>
+#include <chrono>
 
 typedef long long ll;
 
-int main(){
+void part_a() {
+}
+
+void part_b() {
   ll h = 0;
   ll b = 81;
   ll c = b;
@@ -11,11 +18,11 @@ int main(){
   b += 100000;
   c = b;
   c += 17000;
-asdf2:
+lbl2:
   ll f = 1;
   ll d = 2;
 
-asdf:
+lbl:
   ll e = 2;
 
   ll g = d;
@@ -27,7 +34,7 @@ asdf:
   g = d;
   g -= b;
   if(g != 0) {
-    goto asdf;
+    goto lbl;
   }
   if(f == 0) {
     h++;
@@ -35,23 +42,15 @@ asdf:
   g = b - c;
   if(g != 0) {
     b += 17;
-    goto asdf2;
+    goto lbl2;
   }
 
   std::cout << h << std::endl;
-
-  return 0;
 }
-#include <sstream>
-#include <iostream>
-#include <string>
-#include <chrono>
 
 void solve() {
-  std::string line;
-  while (std::getline(std::cin, line)) {
-  }
-  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
+  part_a();
+  part_b();
 }
 
 int main(void) {

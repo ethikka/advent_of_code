@@ -8,6 +8,8 @@
 #include <utility>
 #include <chrono>
 
+// solution for my input: uownj // 596
+
 class subprogram;
 
 std::map<std::string,subprogram> container;

@@ -3,7 +3,7 @@
 #include <string>
 #include <chrono>
 #include <vector>
-#include <set>
+#include <unordered_set>
 
 void solve() {
   long value;
@@ -18,7 +18,7 @@ void solve() {
 
   int res2 = 0;
   long index = 0;
-  std::set<long> fr2;
+  std::unordered_set<long> fr2;
   while (fr2.count(res2) == 0)
   {
 	  fr2.insert(res2);

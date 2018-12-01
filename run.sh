@@ -7,7 +7,7 @@ day=$2
 if [ ! $1 ]
 then
   year=`date +"%Y"`
-  day=`date +"%d"`
+  day=`date +"%d" | sed 's/^0*//'`
 fi
 
 file="./buildoutput/d$year$day.out"

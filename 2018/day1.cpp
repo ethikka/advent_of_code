@@ -6,7 +6,6 @@
 #include <set>
 
 void solve() {
-  std::string line;
   long value;
   std::vector<long> freq;
   while (std::cin >> value) {
@@ -20,7 +19,7 @@ void solve() {
   int res2 = 0;
   long index = 0;
   std::set<long> fr2;
-  while (fr2.find(res2) == fr2.end())
+  while (fr2.count(res2) == 0)
   {
 	  fr2.insert(res2);
 	  res2 += freq[index % freq.size()];

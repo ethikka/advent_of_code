@@ -5,6 +5,7 @@
 
 void solve() {
   std::string line;
+  int res1(0), res2(0);
   while (std::getline(std::cin, line)) {
   }
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;

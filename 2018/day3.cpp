@@ -54,11 +54,11 @@ void solve() {
     if (lonely) res2 = f;
   }
 
-  // Welke claims hebben nooit een , in de voorkomende sectors
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }
 
 int main(void) {
+  std::cout << "Starting..." << std::endl;
   auto start_time = std::chrono::high_resolution_clock::now();
   solve();
   auto end_time = std::chrono::high_resolution_clock::now();

@@ -12,6 +12,7 @@ void solve() {
 }
 
 int main(void) {
+  std::cout << "Starting..." << std::endl;
   auto start_time = std::chrono::high_resolution_clock::now();
   solve();
   auto end_time = std::chrono::high_resolution_clock::now();

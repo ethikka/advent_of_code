@@ -1,6 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 #
 # AoC runner
+catch_errors() {
+  exit 1;
+}
+trap catch_errors ERR
+
 year=$1
 day=$2
 
@@ -42,4 +47,5 @@ else
     $file < $inputfile
   fi
 fi 
+
 

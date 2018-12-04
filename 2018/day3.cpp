@@ -4,6 +4,18 @@
 #include <chrono>
 #include <unordered_map>
 #include <set>
+#include <vector>
+
+std::vector<std::string> split(std::string strToSplit, char delimeter)
+{
+  std::stringstream ss(strToSplit);
+  std::string item;
+  std::vector<std::string> splittedStrings;
+  while (std::getline(ss, item, delimeter)) {
+    splittedStrings.push_back(item);
+  }
+  return splittedStrings;
+}
 
 void solve() {
   std::string line;
@@ -33,25 +45,26 @@ void solve() {
   }
 
   std::set<std::string> possible_uncontested;
+  std::set<std::string> contested;
 
   for (auto f: claims) {
     if (f.second.find(",") != std::string::npos) {
+      std::stringstream idx(f.second);
+      std::string part;
+      while (std::getline(idx, part, ',')) {
+        contested.insert(part);
+      }
       res1++;
     }
     else {
       possible_uncontested.insert(f.second);
     }
   }
-  
+ 
   for (auto f: possible_uncontested) {
-    bool lonely(true);
-    for (auto fi: claims) {
-      if (!lonely) break;
-      if (fi.second.find(f) != std::string::npos) {
-        lonely &= fi.second.find(",") == std::string::npos;
-      }
+    if (contested.find(f) == contested.end()) {
+      res2 = f;
     }
-    if (lonely) res2 = f;
   }
 
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;

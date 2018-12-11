@@ -1,71 +1,43 @@
+// God bless https://en.wikipedia.org/wiki/Summed-area_table
 #include <sstream>
 #include <iostream>
 #include <string>
 #include <chrono>
 #include <map>
+#include <stdio.h>
 
-std::map<int,int> power_levels;
-
-int calc_power_level(int serial, int x, int y) {
-/*
-  The rack ID is 3 + 10 = 13.
-  The power level starts at 13 * 5 = 65.
-  Adding the serial number produces 65 + 8 = 73.
-  Multiplying by the rack ID produces 73 * 13 = 949.
-  The hundreds digit of 949 is 9.
-  Subtracting 5 produces 9 - 5 = 4.
-  */
-  return (((((x+10)*y)+serial)*(x+10)%1000)/100)-5;
-}
-
-int64_t calculate_power_cluster(int x, int y, int clustersize) {
-  int64_t totalpower(0);
-  for (int xo = 0; xo < clustersize; xo++)
-    for (int yo = 0; yo < clustersize; yo++)
-      totalpower += power_levels[((x+xo)*1000)+(y+yo)];
-  return totalpower;
-}
-
+int power_levels[301][301];
 
 void solve() {
   int serial_number;
   std::cin >> serial_number;
 
   for (int x = 1; x <= 300; x++)
-    for(int y = 1; y <= 300; y++) 
-      power_levels[(x*1000)+y] = calc_power_level(serial_number, x, y);
-
-  //std::cout << calculate_power_cluster(33, 45);
-  int xx(0), yy(0), maxpower(-9999);
-  for (int x = 1; x <= 297; x++)
-    for(int y = 1; y <= 297; y++) {
-      int totalpower = calculate_power_cluster(x, y, 3);
-      if (totalpower > maxpower) {
-        maxpower = totalpower;
-        xx = x;
-        yy = y;
-      }
+    for(int y = 1; y <= 300; y++)  {
+      int id = x+10;
+      int p = (id*y)+serial_number;
+      p = (p * id) /100 % 10 - 5;
+      power_levels[x][y] = p + power_levels[x - 1][y] + power_levels[x][y - 1] - power_levels[x - 1][y - 1];
     }
-  
 
-  int xxx(0), yyy(0), maxpower2(-9999), siz(1);
-  for (int size = 1; size <= 25 /* couldn't be larger right? */; size++) {
-    for (int x = 1; x <= 300-size; x++)
-      for(int y = 1; y <= 300-size; y++) {
-        int totalpower = calculate_power_cluster(x, y, size);
-        if (totalpower > maxpower2) {
-          maxpower2 = totalpower;
-          xxx = x;
-          yyy = y;
+  std::string part1 = "";
+  int xx(0), yy(0), maxpower(-9999), siz(1);
+  for (int size = 1; size <= 300; size++) {
+    for (int x = size; x <= 300; x++)
+      for(int y = size; y <= 300; y++) {
+        int totalpower = power_levels[x][y] - power_levels[x-size][y] - power_levels[x][y-size] + power_levels[x-size][y-size];
+        if (totalpower > maxpower) {
+          maxpower = totalpower;
+          xx = x;
+          yy = y;
           siz = size;
-          std::cout << "New largest: " << xxx << "," << yyy << "," << siz << std::endl;
         }
       }
-    std::cout << "Larger search area! " << size+1 << std::endl; 
+    if (size == 3) {
+      part1 = std::to_string(xx-2)+","+std::to_string(yy-2);
+    }
   }
-
-
-  std::cout << "Solution part 1: " << xx << "," << yy << std::endl << "Solution part 2: " << xxx << "," << yyy << "," << siz << std::endl;
+  std::cout << "Solution part 1: " << part1 << std::endl << "Solution part 2: " << xx-siz+1 << "," << yy-siz+1 << "," << siz << std::endl;
 }
 
 int main(void) {

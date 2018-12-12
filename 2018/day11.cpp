@@ -23,7 +23,7 @@ void solve() {
   std::string part1 = "";
   int xx(0), yy(0), maxpower(-9999), siz(1);
   for (int size = 1; size <= 300; size++) {
-    for (int x = size; x <= 300-size; x++)
+    for (int x = size; x <= 300; x++)
       for(int y = size; y <= 300; y++) {
         int totalpower = power_levels[x][y] - power_levels[x-size][y] - power_levels[x][y-size] + power_levels[x-size][y-size];
         if (totalpower > maxpower) {

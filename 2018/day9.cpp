@@ -27,6 +27,7 @@ int64_t solve_int(int64_t max_players, int64_t max_marble) {
       // 7 terug zoeken en hotpatchen ;-)
       for (int64_t tmpcount = 0; tmpcount < 7; tmpcount++)
         tmpmarble = tmpmarble->prev;
+
       player_scores[elf] += tmpmarble->value;
       tmpmarble->next->prev = tmpmarble->prev;
       tmpmarble->prev->next = tmpmarble->next;

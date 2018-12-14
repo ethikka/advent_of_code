@@ -5,43 +5,50 @@
 #include <vector>
 
 std::vector<int> recipes;
+std::vector<int> inp;
 int input;
 int res2(0);
 
-bool part_a_finished() {
-  return recipes.size() >= input+10;
-}
-
 bool part_b_finished() {
-  if (res2 > 0) return true;
-  int lastres(0), lastres2(0);
-  for (int i = 1, mul = 1; i <= std::to_string(input).size(); i++, mul *= 10) {
-    lastres += (recipes[recipes.size()-(1*i)]*mul);
-    lastres2 += (recipes[recipes.size()-(1*(i+1))]*mul);
-  }
+  if (res2 == 0) {
+    int size = inp.size();
+    int recipesize = recipes.size();
+    bool last(true), last_1(true);
+    for (int i = 0; i < size; i++) {
+      last &= (recipes[recipesize-i-1] == inp[size-i-1]);
+      last_1 &= (recipes[recipesize-i-2] == inp[size-i-1]);
+      if (!last && !last_1) return false;
+    }
 
-  if (lastres == input && res2 == 0) res2 = recipes.size()-std::to_string(input).size();
-  if (lastres2 == input && res2 == 0) res2 = recipes.size()-std::to_string(input).size()-1;
-  return lastres == input;
+    if (last && res2 == 0) res2 = recipesize-size;
+    if (last_1 && res2 == 0) res2 = recipesize-size-1;
+    //return res2 > 0;
+  }
+  return res2 > 0;
 }
 
 void solve() {
   std::cin >> input;
+  int tmp = input;
+  while (input) {
+    inp.insert(inp.begin(), input % 10);
+    input /= 10;
+  }
+
   recipes.push_back(3);
   recipes.push_back(7);
   int elf_index_1(0), elf_index_2(1);
-  while(!part_b_finished() || !part_a_finished()) {
+  while(!part_b_finished()) {
     int newrecipe = recipes[elf_index_1]+recipes[elf_index_2];
-    if (newrecipe > 9)
-      recipes.push_back(newrecipe/10);
-    recipes.push_back(newrecipe%10);
+    if (newrecipe > 9) recipes.push_back(1);
+    recipes.push_back(newrecipe % 10);
     elf_index_1 = (elf_index_1+1+recipes[elf_index_1]) % recipes.size();
     elf_index_2 = (elf_index_2+1+recipes[elf_index_2]) % recipes.size();
   }
 
   std::string res1;
   for (int i = 0; i < 10; i++)
-    res1 += std::to_string(recipes[input+i]);
+    res1 += std::to_string(recipes[tmp+i]);
 
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }

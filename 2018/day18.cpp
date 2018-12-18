@@ -16,6 +16,12 @@ char board[BOARDSIZE][BOARDSIZE];
 char snapshot[BOARDSIZE][BOARDSIZE];
 int snapshotgen;
 
+void create_image() {
+  for (int y = 0; y < BOARDSIZE; y++) 
+    for(int x = 0; x < BOARDSIZE; x++) 
+      snapshot[y][x] = board[y][x];
+}
+
 void print_board() {
   if (OUTPUTBOARD) {
     std::system("clear");
@@ -28,7 +34,7 @@ void print_board() {
       if (board[y][x] == '|') wood++;
       if (board[y][x] == '#') lumberyard++;
     }
-    if (OUTPUTBOARD) std::cout << std::endl;    
+    if (OUTPUTBOARD) std::cout << std::endl;
   }
   if (generation == 10) res1 = wood*lumberyard;
   if (generation == GENERATIONS) res2 = wood*lumberyard;
@@ -88,7 +94,7 @@ void solve() {
 
   print_board();
   bool fastforwarded(false);
-  for (generation; generation <= GENERATIONS; generation++) {
+  while (generation <= GENERATIONS) {
     // after a 1000 GENERATIONS the board has probably stabilized to a repeating pattern
     if ((generation % 1000) == 0) create_snapshot(); 
     if (generation > 1000 && !fastforwarded) {
@@ -100,6 +106,7 @@ void solve() {
       }
     }
     advance_board();
+    generation++;
   }
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }

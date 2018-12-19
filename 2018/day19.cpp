@@ -14,7 +14,7 @@ struct instruction {
 
 void solve() {
   std::string dontcare;
-  int ip_reg;
+  int ip_reg(0);
   std::array<int64_t,6> registers = {0,0,0,0,0,0};
   std::map<int,instruction> program;
   std::cin >> dontcare >> ip_reg;
@@ -22,7 +22,7 @@ void solve() {
   std::string opcode;
   int64_t a(0),b(0),c(0);
   while (std::cin >> opcode >> a >> b >> c) program[program.size()]  = { opcode, a, b, c };
-  
+
   registers[ip_reg] = 0;
   while (registers[ip_reg] >= 0 && registers[ip_reg] < program.size()) {
     auto inst = program[registers[ip_reg]];
@@ -40,29 +40,20 @@ void solve() {
   }
   int res1(registers[0]);
 
-/*  registers[0] = 1; registers[1] = 0; registers[2] = 0; registers[3] = 0; registers[4] = 0; registers[5] = 0;
-  registers[ip_reg] = 0;
-
+  registers[0] = 1; registers[1] = 0; registers[2] = 0; registers[3] = 0; registers[4] = 0; registers[5] = 0;
   while (registers[ip_reg] >= 0 && registers[ip_reg] < program.size()) {
     auto inst = program[registers[ip_reg]];
-    std::cout << inst.opcode << "[" << std::setw(2) << inst.a << "|" << std::setw(2) << inst.b << "|" << std::setw(2) << inst.c << "]  "; 
-    std::cout << std::setw(9) << registers[0] << std::setw(9) << registers[1] << std::setw(9) << registers[2] << std::setw(9) << registers[3] << std::setw(9) << registers[4] << std::setw(9) << registers[5] << " ---- ";
 
-    // keyhole optimizations ;-)
-    //if (registers[ip_reg] == 3 && registers[1] == 0) registers[3] = registers[2];
-//if (false)    
-    if (registers[ip_reg] == 4 && registers[1] == registers[3]) {
-//      registers[0] += registers[3];
-      registers[1]++;
-      registers[3]++;
-      registers[5] = 3;
-      ip_reg = 4;
+    // poophole optimization ;-) instruction 2 to 12 are equals to this (finding all the factors of the number in register 2)
+    if (registers[ip_reg] == 2 && registers[4] != 0) {
+      if (registers[2] % registers[4] == 0)
+        registers[0] += registers[4];
+      registers[1] = 0;
+      registers[3] = registers[2];
+      registers[ip_reg] = 12;
       inst = program[registers[ip_reg]];
-      std::cout << std::endl << inst.opcode << "[" << inst.a << "|" << inst.b << "|" << inst.c << "]" << registers[0] << ","<< registers[1] << ","<< registers[2] << ","<< registers[3] << ","<< registers[4] << ","<< registers[5] << std::endl;
     }
 
-    std::cout << std::setw(9) << registers[0] << std::setw(9) << registers[1] << std::setw(9) << registers[2] << std::setw(9) << registers[3] << std::setw(9) << registers[4] << std::setw(9) << registers[5] << std::endl;
-    
     // execute instruction at pointer
          if (inst.opcode == "addr") registers[inst.c] = registers[inst.a]+registers[inst.b]; 
     else if (inst.opcode == "addi") registers[inst.c] = registers[inst.a]+inst.b; 
@@ -74,9 +65,7 @@ void solve() {
     else if (inst.opcode == "seti") registers[inst.c] = inst.a; 
     registers[ip_reg]++;
   }
-  int res2(registers[0]);*/
-  std::string res2("Sum of factors of REG[2] after some cycles on my input");
-  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
+  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << registers[0] << std::endl;
 }
 
 int main(void) {

@@ -44,7 +44,7 @@ void solve() {
   while (registers[ip_reg] >= 0 && registers[ip_reg] < program.size()) {
     auto inst = program[registers[ip_reg]];
 
-    // poophole optimization ;-) instruction 2 to 12 are equals to this (finding all the factors of the number in register 2)
+    // peephole optimization ;-) instruction 2 to 12 are equals to this (finding all the factors of the number in register 2)
     if (registers[ip_reg] == 2 && registers[4] != 0) {
       if (registers[2] % registers[4] == 0)
         registers[0] += registers[4];

@@ -22,7 +22,7 @@ void solve() {
   std::string opcode;
   int64_t a(0),b(0),c(0);
   while (std::cin >> opcode >> a >> b >> c) program[program.size()]  = { opcode, a, b, c };
-int instrcount(0);
+
   registers[ip_reg] = 0;
   while (registers[ip_reg] >= 0 && registers[ip_reg] < program.size()) {
     auto inst = program[registers[ip_reg]];
@@ -39,9 +39,9 @@ int instrcount(0);
     registers[ip_reg]++;
     instrcount++;
   }
-  std::cout << instrcount << std::endl;
+
   int res1(registers[0]);
-/*
+
   registers[0] = 1; registers[1] = 0; registers[2] = 0; registers[3] = 0; registers[4] = 0; registers[5] = 0;
   while (registers[ip_reg] >= 0 && registers[ip_reg] < program.size()) {
     auto inst = program[registers[ip_reg]];
@@ -67,7 +67,6 @@ int instrcount(0);
     else if (inst.opcode == "seti") registers[inst.c] = inst.a; 
     registers[ip_reg]++;
   }
-  */
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << registers[0] << std::endl;
 }
 

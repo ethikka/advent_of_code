@@ -6,7 +6,7 @@
 #include "intcode.h"
 
 void solve() {
-  intcode codeblock;
+  intcode interpreter;
   std::string line;
   std::vector<int> intcode;
   int res2(0);
@@ -16,9 +16,9 @@ void solve() {
   std::vector<int> intcode_b(intcode);
   for (int i = 0; i < 100; i++) 
 		for (int j = 0; j < 100; j++) 
-			if (codeblock.run(intcode_b, i, j) == 19690720) 
+			if (interpreter.run(intcode_b, i, j) == 19690720) 
 				res2 = 100 * i + j;
-  std::cout << "Solution part 1: " << codeblock.run(intcode, 12, 2) << std::endl << "Solution part 2: " << res2 << std::endl;
+  std::cout << "Solution part 1: " << interpreter.run(intcode, 12, 2) << std::endl << "Solution part 2: " << res2 << std::endl;
 }
 
 int main(void) {

@@ -3,26 +3,10 @@
 #include <string>
 #include <chrono>
 #include <vector>
-
-int run(std::vector<int> code, int pos_1, int pos_2) {
-  int idx(0);
-  code[1] = pos_1;
-  code[2] = pos_2;
-
-  while (true) {
-    switch(code[idx]) {
-      case  1: code[code[idx+3]] = code[code[idx+1]] + code[code[idx+2]];
-               break;
-      case  2: code[code[idx+3]] = code[code[idx+1]] * code[code[idx+2]];
-               break;
-      case 99: return code[0];
-    }
-    idx += 4;
-  }
-  return -1;
-}
+#include "intcode.h"
 
 void solve() {
+  intcode codeblock;
   std::string line;
   std::vector<int> intcode;
   int res2(0);
@@ -30,11 +14,11 @@ void solve() {
     intcode.push_back(std::stoi(line));
  
   std::vector<int> intcode_b(intcode);
-  for (int i = 0; i < intcode_b.size(); i++) 
-		for (int j = 0; j < intcode_b.size(); j++) 
-			if (run(intcode_b, i, j) == 19690720) 
+  for (int i = 0; i < 100; i++) 
+		for (int j = 0; j < 100; j++) 
+			if (codeblock.run(intcode_b, i, j) == 19690720) 
 				res2 = 100 * i + j;
-  std::cout << "Solution part 1: " << run(intcode, 12, 2) << std::endl << "Solution part 2: " << res2 << std::endl;
+  std::cout << "Solution part 1: " << codeblock.run(intcode, 12, 2) << std::endl << "Solution part 2: " << res2 << std::endl;
 }
 
 int main(void) {

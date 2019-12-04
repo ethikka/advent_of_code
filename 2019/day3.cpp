@@ -4,11 +4,20 @@
 #include <chrono>
 #include <map>
 #include <cmath>
+#include <vector>
+#include <numeric>
+#include "fig.h"
+
+struct intersection {
+  int x;
+  int y;
+};
 
 void solve() {
   std::string line;
   int res1(99999999), res2(99999999), wirecount(0);
   std::map<int,std::map<int,std::map<int,int>>> linemap;
+  std::vector<intersection> intersections;
 
   while (std::getline(std::cin, line)) {
     wirecount++;
@@ -27,21 +36,21 @@ void solve() {
           case 'U': y--; break;
         }
         if (linemap[x][y][wirecount] == 0) linemap[x][y][wirecount] = stepcount;
+        if (linemap[x][y].size() > 1)
+          intersections.push_back({x, y});
       }
     }
   }
 
-  int tmp(0);
-  for (auto wx: linemap) 
-    for (auto wy: linemap[wx.first]) 
-        if (linemap[wx.first][wy.first].size() > 1) {
-          tmp = abs(wx.first)+abs(wy.first);
-          if (tmp < res1) res1 = tmp;
-          tmp = 0;
-          for (auto wc: linemap[wx.first][wy.first])
-            tmp += wc.second;
-          if (tmp < res2) res2 = tmp;
-        }
+  for (auto i: intersections) {
+    if ((abs(i.x)+abs(i.y)) < res1)
+      res1 = abs(i.x)+abs(i.y);
+
+    int tmp = std::accumulate(std::begin(linemap[i.x][i.y]), std::end(linemap[i.x][i.y]), 0, [](const std::size_t previous, const std::pair<const int, std::size_t>& p) { return previous + p.second; });
+    if (tmp < res2) { 
+      res2 = tmp;
+    }
+  }
 
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }

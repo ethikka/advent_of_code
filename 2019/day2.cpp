@@ -7,18 +7,23 @@
 
 void solve() {
   intcode interpreter;
-  std::string line;
-  std::vector<int> intcode;
+  interpreter.load("./2019/fileinput.day2");
+  interpreter.poke(1, 12);
+  interpreter.poke(2, 2);
+  int res1 = interpreter.run();
+
   int res2(0);
-  while (std::getline(std::cin, line, ',')) 
-    intcode.push_back(std::stoi(line));
- 
-  std::vector<int> intcode_b(intcode);
   for (int i = 0; i < 100; i++) 
-		for (int j = 0; j < 100; j++) 
-			if (interpreter.run(intcode_b, i, j) == 19690720) 
-				res2 = 100 * i + j;
-  std::cout << "Solution part 1: " << interpreter.run(intcode, 12, 2) << std::endl << "Solution part 2: " << res2 << std::endl;
+    for (int j = 0; j < 100; j++) {
+      intcode interpreter2;
+      interpreter2.load("./2019/fileinput.day2");
+      interpreter2.poke(1, i);
+      interpreter2.poke(2, j);
+      if (interpreter2.run() == 19690720) {
+        res2 = 100 * i + j;
+      }
+    }
+  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }
 
 int main(void) {

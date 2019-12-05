@@ -1,3 +1,4 @@
 2015 4 ADD=md5.cpp
 2018 18 FLAGS=-Wunused-value
 2019 2 ADD=intcode.cpp
+2019 5 ADD=intcode.cpp

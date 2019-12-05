@@ -6,7 +6,9 @@
 class intcode
 {
    public:
-     int run(std::vector<int> code, int pos_1, int pos_2);
+     void load(std::string filename); 
+     void poke(int address, int value);
+     int run();
 };
 
 #endif

@@ -16,13 +16,8 @@ struct orbitseperator : std::ctype<char> {
     orbitseperator(std::size_t refs = 0) : ctype(make_table(), false, refs) {}
 };
 
-
 struct orbitnode {
-  orbitnode(std::string n, std::string o) {
-    name = n;
-    orbits = o;
-    stepcount = 0;
-  };
+  orbitnode(std::string n, std::string o) { name = n; orbits = o; stepcount = 0; };
   orbitnode() {};
 
   std::string name;
@@ -33,18 +28,11 @@ struct orbitnode {
 void solve() {
   int res1(0), res2(0), cc(0);
   std::map<std::string, orbitnode> planets;
+  std::cin.imbue(std::locale(std::cin.getloc(), new orbitseperator));
   std::string body, orbits;
 
-  std::cin.imbue(std::locale(std::cin.getloc(), new orbitseperator));
-
-  // search&replaced ) in the input with a space for easier parsing
-  while (std::cin >> orbits >> body) {
-    if (planets.count(body) == 0) 
-      planets[body] = orbitnode(body, orbits);
-    //else
-      planets[body].orbits = orbits;
-    if (planets.count(orbits) == 0) planets[orbits] = orbitnode(orbits, ""); 
-  }
+  while (std::cin >> orbits >> body) 
+    planets[body] = orbitnode(body, orbits);
 
   for (auto p: planets) {
     orbitnode on = p.second;
@@ -62,15 +50,11 @@ void solve() {
 
   on = planets[planets["SAN"].orbits];
   while (on.orbits != "") {
-    if (on.stepcount > 0) {
-      res2 += on.stepcount;
-      break;
-    }
-    res2++;
+    ++res2 += on.stepcount;
+    if (on.stepcount > 0) break;
     on = planets[on.orbits];
-  }
-
-  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
+  }  
+  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << --res2 << std::endl;
 }
 
 int main(void) {

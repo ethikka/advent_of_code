@@ -3,29 +3,20 @@
 #include <string>
 #include <chrono>
 #include <cmath>
+#include <array>
+#include <algorithm>
 #include "intcode.h"
 
-int array[5] = {0,1,2,3,4};
-bool part_b = false;
-int res1(0), res2(0);
-
-void swap(int x, int y){
-  int temp = array[x];
-  array[x]=array[y];
-  array[y]=temp;
-  return;
-}
-
-void runsimulation(int size){
-  int i, boostres(0);
+int runsimulation(std::array<int,5> array, bool part_b, int res) {
   if (!part_b) {
-    for (i=0;i<size;i++) {
+    int boostres(0);
+    for (int i=0;i<5;i++) {
       intcode interpreter;
       interpreter.load("./2019/fileinput.day7");
       interpreter.inputqueue({array[i], boostres});
       boostres = interpreter.run();
     }
-    res1 = std::max(res1, boostres); 
+    return std::max(res, boostres); 
   } else {
     intcode intps[5];
     for (int i = 0; i < 5; i++) {
@@ -36,35 +27,24 @@ void runsimulation(int size){
 
     int intidx(0);
     while (true) {
-      int res = intps[intidx].run();
-      if (intps[4].halted()) {
-        res2 = std::max(res2, res);
-        return; 
-      }
+      int boostres = intps[intidx].run();
+      if (intps[4].halted())
+        return std::max(res, boostres);
       ++intidx %= 5;
-      intps[intidx].inputqueue({res});
+      intps[intidx].inputqueue({boostres});
     } 
   }
 }
 
-void permute(int k,int size){
-  if (k==0)
-    runsimulation(size);
-  else {
-    for (int i = k-1; i >= 0; i--) {
-      swap(i, k-1);
-      permute(k-1, size);
-      swap(i, k-1);
-    }
-  }
-}
-
 void solve() {
-  permute(5,5);
-  part_b = true;
-  for (int i = 0; i < 5; i++)
-    array[i] += 5;
-  permute(5,5);
+  int res1(0), res2(0);
+
+  std::array<int,5> part_a{0, 1, 2, 3, 4};
+  while(std::next_permutation(part_a.begin(), part_a.end())) res1 = runsimulation(part_a, false, res1);
+  
+  std::array<int,5> part_b{5, 6, 7, 8, 9};
+  while(std::next_permutation(part_b.begin(), part_b.end())) res2 = runsimulation(part_b, true, res2);
+
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }
 

@@ -13,49 +13,63 @@ enum opcode {
   jumpiffalse = 6,
   lessthan = 7,
   equals = 8,
+  modbase = 9,
   halt = 99 };
 
-enum parametermode { position = 0, immidiate = 1};
+enum parametermode { position = 0, immidiate = 1, relative = 2};
+
+struct instruction;
+
+class intcode
+{
+//  public:
+//    intcode(std::string file) { load(file); };  
+  private:
+    std::vector<int64_t> inputbuffer;
+    bool _halted = false;
+    int64_t instructionpointer = 0;
+    int64_t outputdiag = 0;
+  public:
+    std::vector<int64_t> memory;
+    int64_t relative_offset = 0;
+
+    void load(std::string filename); 
+    void inputqueue(std::vector<int64_t> num);
+    void poke(int64_t address, int64_t value);
+    int64_t peek(int64_t address);
+    int64_t run();
+    bool halted();
+    void checkmemsize(int64_t targetaddress);
+    instruction parseinstruction(int64_t pointer);
+
+  public: // Debugging functions
+    void print_mem();
+    void print_instruction(instruction inst);
+};
 
 struct parameter {
-  parameter(std::vector<int> mem, int p, parametermode m) { parm = p; mode = m; memory = mem;}
+  parameter(intcode* comp, int64_t p, parametermode m) { 
+    parm = p;
+    mode = m; 
+    intpr = comp; 
+  }
 
-  int value() { 
-    if (mode == position) 
-      return memory.at(parm); 
-    else 
-      return parm; }
-  
-  std::vector<int> memory;
-  int parm;
+  int64_t value() { 
+    switch (mode) {
+      case position: return intpr->memory.at(parm);
+      case immidiate: return parm;
+      case relative: return intpr->memory.at(intpr->relative_offset+parm); 
+    }
+  }
+  intcode* intpr;
+  int64_t parm;
   parametermode mode;
 };
 
 struct instruction {
   opcode opcode;
-  int paramcount;
+  int64_t paramcount;
   std::vector<parameter> parms;
-};
-
-class intcode
-{
-   private:
-   	 std::vector<int> memory;
-     std::vector<int> inputbuffer;
-     bool _halted = false;
-     int instructionpointer = 0;
-     int outputdiag = 0;
-   public:
-     void load(std::string filename); 
-     void inputqueue(std::vector<int> num);
-     void poke(int address, int value);
-     int peek(int address);
-     int run();
-     bool halted();
-
-     instruction parseinstruction(int pointer);
-     void print_mem();
-     void print_instruction(instruction inst);
 };
 
 #endif

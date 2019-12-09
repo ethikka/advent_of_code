@@ -28,8 +28,7 @@ int runsimulation(std::array<int,5> array, bool part_b, int res) {
     int intidx(0);
     while (true) {
       int boostres = intps[intidx].run();
-      if (intps[4].halted())
-        return std::max(res, boostres);
+      if (intps[4].halted()) return std::max(res, boostres);
       ++intidx %= 5;
       intps[intidx].inputqueue({boostres});
     } 
@@ -40,10 +39,12 @@ void solve() {
   int res1(0), res2(0);
 
   std::array<int,5> part_a{0, 1, 2, 3, 4};
-  while(std::next_permutation(part_a.begin(), part_a.end())) res1 = runsimulation(part_a, false, res1);
+  do  res1 = runsimulation(part_a, false, res1);
+  while(std::next_permutation(part_a.begin(), part_a.end()));
   
   std::array<int,5> part_b{5, 6, 7, 8, 9};
-  while(std::next_permutation(part_b.begin(), part_b.end())) res2 = runsimulation(part_b, true, res2);
+  do  res2 = runsimulation(part_b, true, res2);
+  while(std::next_permutation(part_b.begin(), part_b.end()));
 
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }
@@ -53,6 +54,6 @@ int main(void) {
   auto start_time = std::chrono::high_resolution_clock::now();
   solve();
   auto end_time = std::chrono::high_resolution_clock::now();
-  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-  std::cout << "Ran for " << ms_count << "ms" << std::endl;
+  auto ms_count = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
+  std::cout << "Ran for " << ms_count << "us" << std::endl;
 }

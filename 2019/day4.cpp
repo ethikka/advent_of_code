@@ -21,7 +21,7 @@ void solve() {
     bool repeats(false), increasing(true), exact_doubles(false);
     for (int cnt = 6; cnt > 0; cnt--) {
       repeats |= (digits[cnt] == digits[cnt-1]);
-      increasing = increasing && (digits[cnt] <= digits[cnt-1]);
+      increasing &= (digits[cnt] <= digits[cnt-1]);
     }
 
     // only exact doubles =)

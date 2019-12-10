@@ -22,8 +22,6 @@ struct instruction;
 
 class intcode
 {
-//  public:
-//    intcode(std::string file) { load(file); };  
   private:
     std::vector<int64_t> inputbuffer;
     bool _halted = false;

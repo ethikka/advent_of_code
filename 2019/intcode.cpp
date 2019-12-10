@@ -52,7 +52,7 @@ void intcode::print_mem() {
 
 void intcode::print_instruction(instruction inst) {
   std::cout << instructionpointer << " " << inst.opcode << "(" << memory.at(instructionpointer) << ").";
-  for(auto p: inst.parms) std::cout << p.parm << "|" << p.value() << "|" << p.mode << " ";
+  for(auto p: inst.parms) std::cout << p.parm << "|" << p.mode << " ";
   std::cout << std::endl;
 }
 
@@ -68,26 +68,28 @@ int64_t intcode::run() {
     //print_mem();
     //print_instruction(inst);
     switch(inst.opcode) {
-      case add        : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), inst.parms[0].value() + inst.parms[1].value()); break;
-      case multiply   : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), inst.parms[0].value() * inst.parms[1].value()); break;
-      case input      :
+/*1*/ case add        : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), inst.parms[0].value() + inst.parms[1].value()); break;
+/*2*/ case multiply   : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), inst.parms[0].value() * inst.parms[1].value()); break;
+/*3*/ case input      :
         if (inputbuffer.size() > 0) {
           poke(inst.parms[0].parm + ((inst.parms[0].mode == relative) ? relative_offset : 0), inputbuffer.at(0));
           inputbuffer.erase(inputbuffer.begin());
         } 
         break;
-      case output     : 
+/*4*/ case output     : 
         //std::cout << "DIAGNOSTIC "<< inst.parms[0].value() << std::endl;
         outputdiag = inst.parms[0].value();
         instructionpointer += (inst.paramcount+1);
         return outputdiag;                                                          
-      case jumpiftrue : instructionpointer = ((inst.parms[0].value() != 0) ? inst.parms[1].value(): instructionpointer + inst.paramcount + 1); break; 
-      case jumpiffalse: instructionpointer = ((inst.parms[0].value() == 0) ? inst.parms[1].value(): instructionpointer + inst.paramcount + 1); break;
-      case lessthan   : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), ((inst.parms[0].value() < inst.parms[1].value()) ? 1: 0));  break;
-      case equals     : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), ((inst.parms[0].value() == inst.parms[1].value()) ? 1: 0)); break;
-      case modbase    : relative_offset += inst.parms[0].value(); break;
-      case halt       : _halted = true; return outputdiag;
-      case none       : break;
+/*5*/ case jumpiftrue : if (inst.parms[0].value() != 0) instructionpointer = inst.parms[1].value();
+                        else                            instructionpointer += (inst.paramcount + 1); break; 
+/*6*/ case jumpiffalse: if (inst.parms[0].value() == 0) instructionpointer = inst.parms[1].value();
+                        else                            instructionpointer += (inst.paramcount + 1); break;
+/*7*/ case lessthan   : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), ((inst.parms[0].value() < inst.parms[1].value()) ? 1: 0));  break;
+/*8*/ case equals     : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), ((inst.parms[0].value() == inst.parms[1].value()) ? 1: 0)); break;
+/*9*/ case modbase    : relative_offset += inst.parms[0].value(); break;
+/*99*/case halt       : _halted = true; return outputdiag;
+/*0*/ case none       : break;
     }
     if (inst.opcode != jumpiffalse && inst.opcode != jumpiftrue)
       instructionpointer += (inst.paramcount+1);

@@ -40,6 +40,7 @@ if [ ! -f $file ]
 then
   echo "Make failed!"
 else
+  clear
   if [ ! -f $inputfile ]
   then
     $file 

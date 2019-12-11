@@ -54,9 +54,9 @@ struct parameter {
 
   int64_t value() { 
     switch (mode) {
-      case position: return intpr->memory.at(parm);
+      case position: if (intpr->memory.size()  <= parm) return 0; return intpr->memory.at(parm);
       case immidiate: return parm;
-      case relative: return intpr->memory.at(intpr->relative_offset+parm); 
+      case relative: if (intpr->memory.size()  <= intpr->relative_offset+parm) return 0; return intpr->memory.at(intpr->relative_offset+parm); 
     }
   }
   intcode* intpr;

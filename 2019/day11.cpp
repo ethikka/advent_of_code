@@ -4,16 +4,17 @@
 #include <map>
 #include <cmath>
 #include <chrono>
+#include <thread>
 #include "intcode.h"
 
 std::string colors[2] {" ", "#"};
-std::string directions[4] { "U", "R", "D", "L"};
-std::string colornames[2] { "black", "white"};
 
 
-void print_plate(std::map<std::pair<int,int>,int> plate) {
+void print_plate(std::map<std::pair<int,int>,int> plate, int xx, int yy) {
   for(auto p: plate) 
-    std::cout << "\033[" << p.first.first+4 << ";" << p.first.second+1 << "H" << colors[p.second];
+    std::cout << "\033[" << p.first.first+5 << ";" << p.first.second+1 << "H" << colors[p.second];
+  if (xx != -1)
+    std::cout << "\033[" << xx+5 << ";" << yy+1 << "H" << "O";
 }
 
 int run_robot(int initial_val, bool output_map) {
@@ -26,10 +27,10 @@ int run_robot(int initial_val, bool output_map) {
   plate[std::make_pair(vx, vy)] = initial_val;
   while (!interpreter.halted()) {
     auto coord = std::make_pair(vx, vy);
-//    std::cout << "at (" << vy << "," << -1*vx << ") which is currently " << colornames[plate[coord]];
     interpreter.inputqueue({(int)plate[coord]});
-    plate[coord] = interpreter.run();
-//    std::cout << ", new color will be " << colornames[plate[coord]] << ", facing " << directions[direction] << std::endl;
+    int col = interpreter.run();  // no more rogue pixel
+    if (interpreter.halted()) break;
+    plate[coord] = col;
 
     direction = (interpreter.run() == 1)? (++direction+4) % 4 : (--direction+4) % 4;
     switch (direction) {
@@ -38,16 +39,20 @@ int run_robot(int initial_val, bool output_map) {
       case /*right*/1: vy++; break;
       case /*left*/ 3: vy--; break;
     }
+    if (output_map) {
+      print_plate(plate, vx, vy);
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
   }
   if (output_map)
-    print_plate(plate);
+    print_plate(plate, -1, -1);
   return plate.size();
 }
 
 void solve() {
   std::cout << "Solution part 1: " << std::endl << run_robot(0, false) << std::endl;
-  //std::cout << "Solution part 2: " << std::endl;
-  //run_robot(1, true);
+  std::cout << "Solution part 2: " << std::endl;
+  run_robot(1, true);
 }
 
 int main(void) {

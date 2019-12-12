@@ -7,6 +7,9 @@
 #include "intcode.h"
 
 std::string colors[2] {" ", "#"};
+std::string directions[4] { "U", "R", "D", "L"};
+std::string colornames[2] { "black", "white"};
+
 
 void print_plate(std::map<std::pair<int,int>,int> plate) {
   for(auto p: plate) 
@@ -23,8 +26,11 @@ int run_robot(int initial_val, bool output_map) {
   plate[std::make_pair(vx, vy)] = initial_val;
   while (!interpreter.halted()) {
     auto coord = std::make_pair(vx, vy);
+//    std::cout << "at (" << vy << "," << -1*vx << ") which is currently " << colornames[plate[coord]];
     interpreter.inputqueue({(int)plate[coord]});
     plate[coord] = interpreter.run();
+//    std::cout << ", new color will be " << colornames[plate[coord]] << ", facing " << directions[direction] << std::endl;
+
     direction = (interpreter.run() == 1)? (++direction+4) % 4 : (--direction+4) % 4;
     switch (direction) {
       case /*up*/   0: vx--; break;
@@ -39,9 +45,9 @@ int run_robot(int initial_val, bool output_map) {
 }
 
 void solve() {
-  std::cout << "Solution part 1: " << run_robot(0, false) << std::endl;
-  std::cout << "Solution part 2: " << std::endl;
-  run_robot(1, true);
+  std::cout << "Solution part 1: " << std::endl << run_robot(0, false) << std::endl;
+  //std::cout << "Solution part 2: " << std::endl;
+  //run_robot(1, true);
 }
 
 int main(void) {

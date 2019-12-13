@@ -7,14 +7,14 @@
 #include <thread>
 #include "intcode.h"
 
-std::string colors[2] {" ", "#"};
-
+std::string colors[2] {"  ", "##"};
 
 void print_plate(std::map<std::pair<int,int>,int> plate, int xx, int yy) {
+  std::cout << "\033[0;0H" << std::endl; /* buffering gaat dan beter? geen idee waarom*/
   for(auto p: plate) 
-    std::cout << "\033[" << p.first.first+5 << ";" << p.first.second+1 << "H" << colors[p.second];
+    std::cout << "\033[" << p.first.first+5 << ";" << p.first.second*2+1 << "H" << colors[p.second];
   if (xx != -1)
-    std::cout << "\033[" << xx+5 << ";" << yy+1 << "H" << "O";
+    std::cout << "\033[" << xx+5 << ";" << yy*2+1 << "H" << "[]";
 }
 
 int run_robot(int initial_val, bool output_map) {
@@ -31,6 +31,10 @@ int run_robot(int initial_val, bool output_map) {
     int col = interpreter.run();  // no more rogue pixel
     if (interpreter.halted()) break;
     plate[coord] = col;
+    if (output_map) {
+      print_plate(plate, vx, vy);
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
     direction = (interpreter.run() == 1)? (++direction+4) % 4 : (--direction+4) % 4;
     switch (direction) {
@@ -38,10 +42,6 @@ int run_robot(int initial_val, bool output_map) {
       case /*down*/ 2: vx++; break;
       case /*right*/1: vy++; break;
       case /*left*/ 3: vy--; break;
-    }
-    if (output_map) {
-      print_plate(plate, vx, vy);
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
   }
   if (output_map)

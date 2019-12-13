@@ -5,3 +5,5 @@
 2019 7 ADD=intcode.cpp
 2019 9 ADD=intcode.cpp
 2019 11 ADD=intcode.cpp
+2019 13 ADD=intcode.cpp
+2019 131 ADD=intcode.cpp

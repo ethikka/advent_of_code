@@ -12,6 +12,21 @@ int opcodeparamcount[10] = { 0, 3, 3, 1, 1, 2, 2, 3, 3, 1};
 /*-------------------------------------------------------------------------------------------------------*/
 // intcode
 /*-------------------------------------------------------------------------------------------------------*/
+intcode::intcode() {};
+intcode::intcode(std::string filename) {
+  load(filename);
+};
+intcode::intcode(int ip, int ro, std::vector<int64_t> mem) {
+  instructionpointer = ip;
+  relative_offset = ro;
+  for (int i=0; i < mem.size(); i++) 
+    memory.push_back(mem[i]); 
+};
+
+intcode intcode::clone() {
+  return intcode(instructionpointer, relative_offset, memory);
+}
+
 void intcode::load(std::string filename) {
   memory.clear();
   inputbuffer.clear();

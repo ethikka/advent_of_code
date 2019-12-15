@@ -3,6 +3,8 @@
 
 #include <vector>
 
+class intcode;
+
 enum opcode { 
   none = 0, 
   add = 1,
@@ -22,6 +24,11 @@ struct instruction;
 
 class intcode
 {
+  public:
+    intcode();
+    intcode(std::string filename);
+    intcode(int ip, int ro, std::vector<int64_t> mem);
+
   private:
     std::vector<int64_t> inputbuffer;
     bool _halted = false;
@@ -43,6 +50,7 @@ class intcode
   public: // Debugging functions
     void print_mem();
     void print_instruction(instruction inst);
+    intcode clone();
 };
 
 struct parameter {

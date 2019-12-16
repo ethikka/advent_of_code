@@ -7,62 +7,27 @@
 #include <algorithm>
 #include <iomanip>
 
-int basepattern[4] = { 0, 1, 0, -1 };
-int offset = 0;
-
-struct phase;
-
-auto timer = std::chrono::high_resolution_clock::now();
-
-/*
-  i =   0 1 2 3 4 5 6
----------------------
-d=0 [ _ 1 2 3 0 1 2 3 ]
-d=1 [ _ 0 1 1 2 2 3 3 ]
-d=2 [ _ 0 0 1 1 1 2 2 ]
-d=3 [ _ 0 0 0 1 1 1 1 ...]
-d=4 [ _ 0 0 0 0 1 1 1 ...]
-
-
-(i / (d+1)) + 1
-
-*/
-
-int fft(int i, int d) {
-  return ((i+1) / (d+1)) % 4;
-};
-
 struct phase {
   int phasenumber;
   std::vector<int> signal;
+  int basepattern[4] = { 0, 1, 0, -1 };
 
-  phase permutate() {
-    phase p;
-    p.phasenumber = phasenumber+1;
+  void permutate() {
+    phasenumber++;
+    std::vector<int> newsignal;
     for(int idx = 0; idx < signal.size(); idx++) {
       int res(0);
       for (int iidx = idx; iidx < signal.size(); iidx++) 
-        res += signal[iidx] * basepattern[fft(iidx, idx)];
-      p.signal.push_back(abs(res) % 10);
+        res += signal[iidx] * basepattern[((iidx+1) / (idx+1)) % 4];
+      newsignal.push_back(abs(res) % 10);
     };
-    return p;
+    signal = newsignal;
   };
 
-  phase permutate2() {
-    phase p;
-    p.phasenumber = phasenumber+1;
-    p.signal.resize(signal.size());
-    std::fill (p.signal.begin(),p.signal.end(),0);
-    p.signal[signal.size()-1] = signal[signal.size()-1];
-
-    for (int idx = p.signal.size()-2; idx >= offset; idx--) 
-      p.signal[idx] = abs(signal[idx]+p.signal[idx + 1]) % 10;
-    return p;
-  };
-
-  void print(int offset, int size) {
-    for(int i = offset; i < offset + size; i++)
-      std::cout << signal[i];
+  void permutate2(int offset) {
+    phasenumber++;
+    for (int idx = signal.size()-2; idx >= offset; idx--) 
+      signal[idx] = abs(signal[idx]+signal[idx + 1]) % 10;
   };
 
   int res(int offset) {
@@ -78,33 +43,29 @@ struct phase {
 
 void solve() {
   char c;
-  int res1(0), res2(0);
   phase p;
   p.phasenumber = 0;
+  int offset = 0;
 
-  while (std::cin >> c)  p.signal.push_back((int)c-48);
+  while (std::cin >> c) 
+    p.signal.push_back((int)c-48);
 
   phase p1(p);
   while (p1.phasenumber < 100) 
-    p1 = p1.permutate();
-  res1 = p1.res(offset);
+    p1.permutate();
 
-  int multiplier(1000000);
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0, multiplier = 1000000; i < 7; i++, multiplier /= 10) 
     offset += p.signal[i]*multiplier;
-    multiplier /= 10;
-  }
 
-  phase p3(p);
+  phase p2(p);
   for (int i = 0; i < 9999; i++)
     for(int idx = 0; idx < p.signal.size(); idx++)
-      p3.signal.push_back(p3.signal[idx]);
+      p2.signal.push_back(p2.signal[idx]);
 
-  while (p3.phasenumber < 100) 
-    p3 = p3.permutate2();
-  res2 = p3.res(offset);
+  while (p2.phasenumber < 100) 
+    p2.permutate2(offset);
 
-  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
+  std::cout << "Solution part 1: " << p1.res(0) << std::endl << "Solution part 2: " << p2.res(offset) << std::endl;
 }
 
 int main(void) {

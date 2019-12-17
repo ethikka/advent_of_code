@@ -72,8 +72,9 @@ void intcode::print_instruction(instruction inst) {
 }
 
 void intcode::checkmemsize(int64_t targetaddress) {
-  if (memory.size() < targetaddress) 
+  if (memory.size() <= targetaddress) {
     memory.resize(targetaddress+64); 
+  }
 }
 
 int64_t intcode::run() {

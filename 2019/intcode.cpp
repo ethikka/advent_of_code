@@ -19,8 +19,7 @@ intcode::intcode(std::string filename) {
 intcode::intcode(int ip, int ro, std::vector<int64_t> mem) {
   instructionpointer = ip;
   relative_offset = ro;
-  for (int i=0; i < mem.size(); i++) 
-    memory.push_back(mem[i]); 
+  memory = mem;
 };
 
 intcode intcode::clone() {
@@ -87,6 +86,7 @@ int64_t intcode::run() {
 /*1*/ case add        : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), inst.parms[0].value() + inst.parms[1].value()); break;
 /*2*/ case multiply   : poke(inst.parms[2].parm + ((inst.parms[2].mode == relative) ? relative_offset : 0), inst.parms[0].value() * inst.parms[1].value()); break;
 /*3*/ case input      :
+        //std::cout << "INPUT " << inputbuffer.at(0) << std::endl;
         if (inputbuffer.size() > 0) {
           poke(inst.parms[0].parm + ((inst.parms[0].mode == relative) ? relative_offset : 0), inputbuffer.at(0));
           inputbuffer.erase(inputbuffer.begin());

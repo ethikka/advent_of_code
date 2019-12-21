@@ -40,6 +40,7 @@ class intcode
 
     void load(std::string filename); 
     void inputqueue(std::vector<int64_t> num);
+    void inputqueue_text(std::vector<std::string> text);
     void poke(int64_t address, int64_t value);
     int64_t peek(int64_t address);
     int64_t run();

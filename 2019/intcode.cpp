@@ -40,6 +40,14 @@ void intcode::load(std::string filename) {
 bool    intcode::halted()                              { return _halted; }
 int64_t intcode::peek(int64_t address)                 { return memory.at(address); }
 void    intcode::inputqueue(std::vector<int64_t> nums) { for(int64_t i: nums) inputbuffer.push_back(i); }
+void    intcode::inputqueue_text(std::vector<std::string> text) { 
+  for (auto t: text) { 
+    for (char c: t) {
+      inputbuffer.push_back((int)c); 
+    }
+    inputbuffer.push_back(10); 
+  } 
+}
 
 void intcode::poke(int64_t address, int64_t value) {
   checkmemsize(address);

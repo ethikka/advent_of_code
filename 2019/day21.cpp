@@ -17,7 +17,8 @@ void solve() {
                          "AND D J",
                          "WALK"});
   while(!intpr.halted()) {
-    int x = intpr.run();
+    intpr.run();
+    int x = intpr.output();
     if (x > 255) res1 = x;
     else         std::cout << (char)x;
   }
@@ -34,7 +35,8 @@ void solve() {
                           "RUN"});
 
   while(!intpr2.halted()) {
-    int x = intpr2.run();
+    intpr2.run();
+    int x = intpr2.output();
     if (x > 255) res2 = x;
     else         std::cout << (char)x;
   }

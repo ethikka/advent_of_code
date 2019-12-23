@@ -11,10 +11,10 @@ int runsimulation(std::array<int,5> array, bool part_b, int res) {
   if (!part_b) {
     int boostres(0);
     for (int i=0;i<5;i++) {
-      intcode interpreter;
-      interpreter.load("./2019/fileinput.day7");
+      intcode interpreter("./2019/fileinput.day7");
       interpreter.inputqueue({array[i], boostres});
-      boostres = interpreter.run();
+      if (interpreter.run() == outputMode)
+        boostres = interpreter.output();
     }
     return std::max(res, boostres); 
   } else {
@@ -26,9 +26,15 @@ int runsimulation(std::array<int,5> array, bool part_b, int res) {
     intps[0].inputqueue({0});
 
     int intidx(0);
+    int boostres;
     while (true) {
-      int boostres = intps[intidx].run();
-      if (intps[4].halted()) return std::max(res, boostres);
+      intps[intidx].run();
+      int boostres = intps[intidx].output();
+      if (boostres == -99999) boostres = res;
+      if (intps[4].halted()) {
+        std::cout << boostres << " " << res << std::endl;
+        return std::max(res, boostres);
+      }
       ++intidx %= 5;
       intps[intidx].inputqueue({boostres});
     } 

@@ -11,14 +11,18 @@ void solve() {
   intcode interpreter;
   interpreter.load("./2019/fileinput.day5");
   interpreter.inputqueue({1}); 
-  while (!interpreter.halted())
-    res1 = interpreter.run();
+  while (!interpreter.halted()) {
+    if (interpreter.run() == outputMode)
+      res1 = interpreter.output();
+  }
+  
 // 11933517
   intcode interpreter2;
   interpreter2.load("./2019/fileinput.day5");
   interpreter2.inputqueue({5}); 
   while (!interpreter2.halted())
-    res2 = interpreter2.run();
+    if (interpreter2.run() == outputMode)
+      res2 = interpreter2.output();
 // 10428568
   std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
 }

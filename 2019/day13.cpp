@@ -21,9 +21,10 @@ int run_game(bool cheat) {
 
   while (!interpreter.halted()) {
     if (cheat) interpreter.inputqueue({0});
-    int x = interpreter.run(); 
-    int y = interpreter.run();
-    int val = interpreter.run();
+    interpreter.run(); interpreter.run(); interpreter.run();
+    int x = interpreter.output();; 
+    int y = interpreter.output();
+    int val = interpreter.output();
     if (interpreter.halted()) return res;
     if (!cheat && val == 2) 
       res++;

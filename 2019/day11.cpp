@@ -28,15 +28,18 @@ int run_robot(int initial_val, bool output_map) {
   while (!interpreter.halted()) {
     auto coord = std::make_pair(vx, vy);
     interpreter.inputqueue({(int)plate[coord]});
-    int col = interpreter.run();  // no more rogue pixel
+    int col;
+    if (interpreter.run() == outputMode)
+       col = interpreter.output();  // no more rogue pixel
     if (interpreter.halted()) break;
     plate[coord] = col;
     if (output_map) {
       print_plate(plate, vx, vy);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+    interpreter.run();
 
-    direction = (interpreter.run() == 1)? (++direction+4) % 4 : (--direction+4) % 4;
+    direction = (interpreter.output() == 1)? (++direction+4) % 4 : (--direction+4) % 4;
     switch (direction) {
       case /*up*/   0: vx--; break;
       case /*down*/ 2: vx++; break;

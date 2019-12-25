@@ -22,6 +22,19 @@ intcode::intcode(int ip, int ro, std::vector<int64_t> mem) {
   memory = mem;
 };
 
+void intcode::dump() {
+
+}
+
+void intcode::print_stack() {
+  std::cout << "IP: " << instructionpointer << " relative_offset: " << relative_offset << std::endl;
+  for (int i = 0; i < 100; i++){
+    std::cout << std::setw(6) << memory.at(i);
+    if ((i % 25)==24)
+      std::cout << std::endl;
+  }
+}
+
 intcode intcode::clone() {
   return intcode(instructionpointer, relative_offset, memory);
 }
@@ -36,6 +49,10 @@ void intcode::load(std::string filename) {
     memory.push_back(std::stol(line));
   }
 } 
+
+bool intcode::has_output() {
+  return (outputbuffer.size() > 0);
+}
 
 int64_t intcode::output() {
   if (outputbuffer.size() == 0) 

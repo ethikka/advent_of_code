@@ -43,6 +43,7 @@ class intcode
     void load(std::string filename); 
     void inputqueue(std::vector<int64_t> num);
     void inputqueue_text(std::vector<std::string> text);
+    bool has_output();
     int64_t output();
     void poke(int64_t address, int64_t value);
     int64_t peek(int64_t address);
@@ -55,6 +56,10 @@ class intcode
     void print_mem();
     void print_instruction(instruction inst);
     intcode clone();
+
+  public:
+    void dump();
+    void print_stack();
 };
 
 struct parameter {

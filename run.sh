@@ -29,23 +29,25 @@ then
   make $day YEAR=$year $extraoptions
 fi
 
-if [ $cppfile -nt $file ]
-then
-  echo "Old binary: making '$year' '$day' "
-  make $day YEAR=$year $extraoptions
-fi
-
-
-if [ ! -f $file ]
-then
-  echo "Make failed!"
-else
-  if [ ! -f $inputfile ]
+while true
+do
+  if [ $cppfile -nt $file ]
   then
-    $file 
-  else
-    $file < $inputfile
+    echo "Old binary: making '$year' '$day' "
+    make $day YEAR=$year $extraoptions
+
+    if [ ! -f $file ]
+    then
+      echo "Make failed!"
+    else
+      if [ ! -f $inputfile ]
+      then
+        $file 
+      else
+        $file < $inputfile
+      fi
+    fi
   fi
-fi 
+done
 
 

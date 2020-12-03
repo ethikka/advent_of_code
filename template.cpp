@@ -2,7 +2,7 @@
 #include "../common/lib.h"
 
 std::pair<int,int> solve() {
-  std::pair<int,int> res;
+  std::pair<int,int> res; // res.first = solution for part a, res.second = solution for part b
   std::string line;
   while (std::cin >> line) {
   }

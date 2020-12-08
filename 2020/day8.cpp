@@ -1,7 +1,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include <map>
+#include <set>
 #include <cmath>
 #include "../common/lib.h"
 
@@ -10,17 +10,14 @@ int run(int fixline, std::vector<std::string> memory) {
     if      (memory[fixline].substr(0, 3) == "nop") memory[fixline] = "jmp" + memory[fixline].substr(3);
     else if (memory[fixline].substr(0, 3) == "jmp") memory[fixline] = "nop" + memory[fixline].substr(3);
   }
-  std::map<int,int> acc;
+  std::set<int> acc;
   int ip(0), lacc(0);
   while (ip < memory.size()) {
-    if (acc.count(ip)) {
-      if (fixline == -1)
-        return lacc;
-      else
-        return -9999999;
+    if (acc.find(ip) != acc.end()) {
+      return fixline == -1 ? lacc: -9999999;
     } else {
       int parm = std::stoi(memory[ip].substr(memory[ip].find(" ")+1));
-      acc[ip] = lacc;
+      acc.insert(ip);
       if      (memory[ip].substr(0, 3) == "acc") lacc += parm;
       else if (memory[ip].substr(0, 3) == "jmp") { ip += parm-1; }
       ip++;

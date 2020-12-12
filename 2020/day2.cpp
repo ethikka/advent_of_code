@@ -1,11 +1,7 @@
 #include <sstream>
-#include <iostream>
-#include <string>
-#include <chrono>
-#include <algorithm>
 #include "../common/lib.h"
 
-std::pair<int,int> solve() {
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::pair<std::uintmax_t,std::uintmax_t> res;
   std::string quant, chr, pass;
   while (std::cin >> quant >> chr >> pass) {
@@ -20,9 +16,3 @@ std::pair<int,int> solve() {
   }
   return res;
 }
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
-}
-

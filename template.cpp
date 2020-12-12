@@ -8,7 +8,3 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   }
   return res;
 }
-
-int main(void) {
-  post_solve(solve());
-}

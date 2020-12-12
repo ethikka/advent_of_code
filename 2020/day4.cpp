@@ -48,8 +48,8 @@ struct passport {
   void add(std::string propname, std::string propvalue) { properties[propname] = propvalue; }
 };
 
-std::pair<int,int> solve() {
-  std::pair<int,int> res;
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res;
   std::string line;
   passport newpass;
   while (std::getline(std::cin, line)) {
@@ -69,9 +69,4 @@ std::pair<int,int> solve() {
   if (newpass.isValid()) res.first++;
   if (newpass.isValid2()) res.second++;
   return res;
-}
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
 }

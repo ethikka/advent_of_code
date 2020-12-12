@@ -40,8 +40,8 @@ bool generation(char seats[][128], int numseats, bool line_of_sight) {
   return delta > 0;
 }
 
-std::pair<int,int> solve() {
-  std::pair<int,int> res; 
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res; 
  
   char inp;
   while (std::cin >> std::noskipws >> inp) 
@@ -59,9 +59,4 @@ std::pair<int,int> solve() {
       if (seats_b[x][y] == '#') res.second++;
     }    
   return res;
-}
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
 }

@@ -5,9 +5,9 @@
 #include <cppitertools/combinations.hpp>
 #include "../common/lib.h"
 
-std::pair<int,int> solve() {
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
   int PREAMBLE = 25;
-  std::pair<int,int> res; 
+  std::pair<std::uintmax_t,std::uintmax_t> res; 
   std::list<int> numbers;
   std::vector<int> hist_num;
   int inp;
@@ -41,9 +41,4 @@ std::pair<int,int> solve() {
     }
   }
   return res;
-}
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
 }

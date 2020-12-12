@@ -11,8 +11,8 @@ struct workload {
   std::string key;
 };
 
-std::pair<int,int> solve() {
-  std::pair<int,int> res; 
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res; 
   std::string line;
 
   std::map<std::string, std::set<std::string>> bag_in;
@@ -55,11 +55,5 @@ std::pair<int,int> solve() {
     }
     work2.pop();
   }  
-
   return res;
-}
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
 }

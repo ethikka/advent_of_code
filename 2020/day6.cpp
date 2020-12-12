@@ -2,8 +2,8 @@
 #include <map>
 #include "../common/lib.h"
 
-std::pair<int,int> solve() {
-  std::pair<int,int> res; // res.first = solution for part a, res.second = solution for part b
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res; 
   char inp, last;
   int groupcount(0);
   std::map<char,int> answers;
@@ -26,9 +26,4 @@ std::pair<int,int> solve() {
     last = inp;
   }
   return res;
-}
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
 }

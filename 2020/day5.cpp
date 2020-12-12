@@ -3,8 +3,8 @@
 #include <set>
 #include "../common/lib.h"
 
-std::pair<int,int> solve() {
-  std::pair<int,int> res; 
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res; 
   char inp;
   std::set<int> seats;
   std::string num = "";
@@ -23,9 +23,4 @@ std::pair<int,int> solve() {
 
   res.first = *seats.rbegin();
   return res;
-}
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
 }

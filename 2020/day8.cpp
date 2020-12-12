@@ -32,8 +32,8 @@ int run(int fixline) {
   return lacc;
 }
 
-std::pair<int,int> solve() {
-  std::pair<int,int> res;
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<int,int> res; // no need for std::pair<std::uintmax_t,std::uintmax_t> res;
 
   std::string line;
   while (std::getline(std::cin, line)) 
@@ -45,9 +45,4 @@ std::pair<int,int> solve() {
     if (memory[i].substr(0, 3) != "acc")
       res.second = std::max(res.second, run(i));
   return res;
-}
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
 }

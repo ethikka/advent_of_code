@@ -36,5 +36,12 @@ int manhattan(int x, int y) {
   return abs(x)+abs(y);
 };
 
+std::pair<std::uintmax_t,std::uintmax_t> solve();
+
+/* Ugly, but effective ;-)) */
+int main(int argc, char *argv[]) {
+  output_for_timing = (argc > 1);
+  post_solve(solve());
+}
 
 #endif

@@ -1,12 +1,9 @@
 #include <sstream>
-#include <iostream>
-#include <string>
-#include <chrono>
 #include <vector>
 #include <cppitertools/combinations.hpp>
 #include "../common/lib.h"
 
-std::pair<int,int> solve() {
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::pair<std::uintmax_t,std::uintmax_t> res;
   int line(0);
   std::vector<int> e;
@@ -21,9 +18,3 @@ std::pair<int,int> solve() {
   }
   return res;
 }
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
-}
-

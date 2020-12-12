@@ -49,8 +49,3 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   res.second = manhattan(sx, sy);
   return res;
 }
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
-}

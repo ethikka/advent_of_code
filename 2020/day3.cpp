@@ -1,12 +1,9 @@
 #include <sstream>
-#include <iostream>
-#include <string>
-#include <chrono>
 #include <vector>
 #include <map>
 #include "../common/lib.h"
 
-std::pair<int,int> solve() {
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::pair<std::uintmax_t,std::uintmax_t> res;
   char inp;
   int x(0), y(0), width(0);
@@ -32,9 +29,3 @@ std::pair<int,int> solve() {
   }
   return res;
 }
-
-int main(int argc, char *argv[]) {
-  output_for_timing = (argc > 1);
-  post_solve(solve());
-}
-

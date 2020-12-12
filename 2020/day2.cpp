@@ -3,29 +3,26 @@
 #include <string>
 #include <chrono>
 #include <algorithm>
+#include "../common/lib.h"
 
-void solve() {
+std::pair<int,int> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res;
   std::string quant, chr, pass;
-  int res1(0), res2(0);
   while (std::cin >> quant >> chr >> pass) {
     int cnt = std::count(pass.begin(), pass.end(), chr[0]);
     int pos = quant.find('-');
     int minv = std::stoi(quant.substr(0, pos));
     int maxv = std::stoi(quant.substr(pos+1));
     if (cnt >= minv && cnt <= maxv)
-      res1++;
+      res.first++;
     if (!(pass[minv-1] == chr[0]) != !(pass[maxv-1] == chr[0])) 
-      res2++;
+      res.second++;
   }
-  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << res2 << std::endl;
+  return res;
 }
 
-int main(void) {
-  std::cout << "Starting..." << std::endl;
-  auto start_time = std::chrono::high_resolution_clock::now();
-  solve();
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto ms_count = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-  std::cout << "Ran for " << ms_count << " microseconds" << std::endl;
+int main(int argc, char *argv[]) {
+  output_for_timing = (argc > 1);
+  post_solve(solve());
 }
 

@@ -47,6 +47,7 @@ std::pair<int,int> solve() {
   return res;
 }
 
-int main(void) {
+int main(int argc, char *argv[]) {
+  output_for_timing = (argc > 1);
   post_solve(solve());
 }

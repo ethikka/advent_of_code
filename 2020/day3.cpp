@@ -4,10 +4,11 @@
 #include <chrono>
 #include <vector>
 #include <map>
+#include "../common/lib.h"
 
-void solve() {
+std::pair<int,int> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res;
   char inp;
-  int res1(0);
   int x(0), y(0), width(0);
   std::map<std::pair<int,int>,char> map;
   while (std::cin >> std::noskipws >> inp) {
@@ -26,19 +27,14 @@ void solve() {
       if (map.find(std::make_pair(ny, nx % width)) != map.end()) hits++;
       nx += std::get<0>(i);
     }
-    if (std::get<0>(i) == 3) res1 = hits;
-    tot *= hits;
+    if (std::get<0>(i) == 3) res.first = hits;
+    res.second *= hits;
   }
-
-  std::cout << "Solution part 1: " << res1 << std::endl << "Solution part 2: " << tot << std::endl;
+  return res;
 }
 
-int main(void) {
-  std::cout << "Starting..." << std::endl;
-  auto start_time = std::chrono::high_resolution_clock::now();
-  solve();
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto ms_count = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-  std::cout << "Ran for " << ms_count << " microseconds" << std::endl;
+int main(int argc, char *argv[]) {
+  output_for_timing = (argc > 1);
+  post_solve(solve());
 }
 

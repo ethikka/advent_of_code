@@ -1,8 +1,8 @@
 #include <sstream>
 #include "../common/lib.h"
 
-std::pair<int,int> solve() {
-  std::pair<int,int> res; // res.first = solution for part a, res.second = solution for part b
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res;
   std::string line;
   while (std::cin >> line) {
   }

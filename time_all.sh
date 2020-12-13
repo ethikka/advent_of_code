@@ -45,4 +45,4 @@ do
 done
 
 echo "--------+---------------+---------------+----------------"
-printf "Totals\t| %d\t\t| %d\t\t| %d\n" $totalbest  $totalworst $totalavg
+printf "Totals\t| %d\t\t| %d\t| %d\n" $totalbest  $totalworst $totalavg

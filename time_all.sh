@@ -3,7 +3,7 @@
 # AoC time all the things of year {x}
 
 year=$1
-runs=100
+runs=10
 
 if [ ! $1 ]
 then
@@ -26,7 +26,7 @@ do
   inputfile="./$year/input.day$day"
   if [ -f $file ]
   then
-    for cnt in {1..100}
+    for cnt in {1..10}
     do
       if [ ! -f $inputfile ]
       then

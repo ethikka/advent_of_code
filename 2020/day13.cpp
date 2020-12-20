@@ -18,9 +18,8 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
 
   int least(start);
   for (auto i: busses) {
-    auto tmp = lldiv(start, i.first);
-    if ((i.first - tmp.rem) < least) {
-      least = (i.first - tmp.rem);
+    if ((i.first - (start % i.first)) < least) {
+      least = (i.first - (start % i.first));
       res.first = i.first * least;
     }
   }

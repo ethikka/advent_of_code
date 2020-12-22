@@ -22,7 +22,6 @@ key="$year $day"
 optsfile="ExtraOpts.txt"
 
 extraoptions=`egrep "$key" $optsfile | sed 's/[^ ]* *[^ ]* *//'`
-clear
 if [ ! -f $file ]
 then
   echo "No binary: making '$year' '$day' "

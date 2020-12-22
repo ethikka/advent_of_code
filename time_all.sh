@@ -26,14 +26,19 @@ do
   inputfile="./$year/input.day$day"
   if [ -f $file ]
   then
+    printf "\n%d\t" $day
+    
     for cnt in {1..10}
     do
+      printf "."
+
       if [ ! -f $inputfile ]
       then
         retVal=`$file t`
       else
         retVal=`$file t < $inputfile`
       fi
+
       total=$(($total + retVal))
       subt=$(($subt + retVal))
       best=$((best > retVal || best == 0 ? retVal: best))
@@ -53,7 +58,7 @@ do
   fi
 done
 
-printf "Running each day %d times\n\n" $runs
+printf "\n\nRunning each day %d times\n\n" $runs
 
 printf "\tDay\t"
 for day in {1..25}

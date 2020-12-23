@@ -28,7 +28,7 @@ do
   then
     printf "\n%d\t" $day
     
-    for cnt in {1..10}
+    for cnt in $( eval echo {1..$runs} )
     do
       printf "."
 

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <unordered_map>
 
 struct automata_options {
   int x_size;
@@ -13,6 +14,7 @@ struct automata_options {
   int (*custom_rule)(int, int, std::vector<int>);
 };
 
+//template <class T, int>
 class automata {
   public:
     automata(automata_options opts) { _opts = opts; };

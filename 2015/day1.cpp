@@ -1,28 +1,18 @@
-#include <iostream>
-#include <string>
+#include <sstream>
 #include <vector>
 #include <iterator>
-#include <chrono>
+#include "../common/lib.h"
 
-void solve(void) {
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
+  std::pair<std::uintmax_t,std::uintmax_t> res{0,0};
   std::vector<char> input { std::istream_iterator<char>{ std::cin }, {}};
-  int currentfloor = 0;
-  int steps = 0, basement = 0;
+  int steps = 0;
   for(auto& i: input) {
-    if      (i == '(') currentfloor++;
-    else if (i == ')') currentfloor--;
+    if      (i == '(') res.first++;
+    else if (i == ')') res.first--;
     steps++;
-    if (currentfloor == -1 && basement == 0)
-      basement = steps;
+    if (res.first == -1 && res.second == 0)
+      res.second = steps;
   }
-  std::cout << "Santa ends up on floor " << currentfloor << " and stepped foot in the basement at " << basement << std::endl;
+  return res;
 }
-
-int main(void) {
-  auto start_time = std::chrono::high_resolution_clock::now();
-  solve();
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-  std::cout << "Ran for " << ms_count << "ms" << std::endl;
-}
-

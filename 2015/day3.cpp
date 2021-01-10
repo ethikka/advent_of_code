@@ -1,36 +1,25 @@
-#include <iostream>
-#include <string>
+#include <map>
+#include <set>
 #include <vector>
 #include <iterator>
-#include <map>
-#include <chrono>
+#include "../common/lib.h"
 
-void solve(void) {
+std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::vector<char> input { std::istream_iterator<char>{ std::cin }, {}};
-  int x = 0, y = 0, rx = 0, ry = 0;
+  int x(0), y(0), bx(0), by(0), rx(0), ry(0);
   bool realsanta = true;
-  std::map<std::pair<int,int>, int> roadmap;
-  roadmap[std::make_pair(0 , 0)] = 1;
+  std::set<std::pair<int,int>> roadmap, roadmap_b;
+  roadmap.insert({0,0});
+  roadmap_b.insert({0,0});
   for(auto& i: input) {
-    if      (i == '^') realsanta ? x++ : rx++;
-    else if (i == 'v') realsanta ? x-- : rx--;
-    else if (i == '<') realsanta ? y-- : ry--;
-    else if (i == '>') realsanta ? y++ : ry++;
+    if      (i == '^') { x++; realsanta ? bx++ : rx++; }
+    else if (i == 'v') { x--; realsanta ? bx-- : rx--; }
+    else if (i == '<') { y--; realsanta ? by-- : ry--; }
+    else if (i == '>') { y++; realsanta ? by++ : ry++; }
 
-    auto k = realsanta ? std::make_pair(x, y) : std::make_pair(rx, ry);
-    if (roadmap.find(k) == roadmap.end()) 
-      roadmap[k] = 0;
-    roadmap[k]++;
+    roadmap.insert(std::make_pair(x, y));
+    roadmap_b.insert(realsanta ? std::make_pair(bx, by) : std::make_pair(rx, ry));
     realsanta = !realsanta;
   }
-  std::cout << "Santa (and RoboSanta =) delivered presents to  " << roadmap.size() << " houses" << std::endl;
+  return { roadmap.size(), roadmap_b.size()};
 }
-
-int main(void) {
-  auto start_time = std::chrono::high_resolution_clock::now();
-  solve();
-  auto end_time = std::chrono::high_resolution_clock::now();
-  auto ms_count = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-  std::cout << "Ran for " << ms_count << "ms" << std::endl;
-}
-

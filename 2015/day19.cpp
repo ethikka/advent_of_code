@@ -32,11 +32,11 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   int sz(-1);
   for(int i = 0; i < mol.size(); i++) {
     auto k = mol.substr(i, 2);
-    if (k == "Rn")          { std::cout << "("; i++; }
-    else if (k == "Ar")     { std::cout << ")"; i++; }
-    else if (mol[i] == 'Y') { sz -= 2; std::cout << ",";}
+    if (k == "Rn")          i++;
+    else if (k == "Ar")     i++;
+    else if (mol[i] == 'Y') sz -= 2; 
     else if (mol[i] > 'Z')  { }
-    if (mol[i] <= 'Z')      { sz++; std::cout << "X";}
+    if (mol[i] <= 'Z')      sz++;
   }
   return {newm.size(), sz};
 }

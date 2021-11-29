@@ -23,19 +23,26 @@ optsfile="ExtraOpts.txt"
 
 extraoptions=`egrep "$key" $optsfile | sed 's/[^ ]* *[^ ]* *//'`
 clear
-if [ ! -f $file ]
-then
-  echo "No binary: making '$year' '$day' "
-  make $day YEAR=$year $extraoptions
-fi
 
+run=true
+echo "Entering low-tech filewatcher"
 while true
 do
+  if [ ! -f $file ]
+  then
+    echo "No binary: making '$year' '$day' "
+    make $day YEAR=$year $extraoptions
+    run=true
+  fi
+
   if [ $cppfile -nt $file ]
   then
     echo "Old binary: making '$year' '$day' "
     make $day YEAR=$year $extraoptions
+    run=true
+  fi
 
+  if "$run"; then
     if [ ! -f $file ]
     then
       echo "Make failed!"
@@ -47,6 +54,7 @@ do
         $file < $inputfile
       fi
     fi
+    run=false
   fi
 done
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # AoC time all the things of year {x}
-
+tabs 12
 year=$1
 runs=10
 
@@ -15,6 +15,10 @@ declare -A daybest
 declare -A dayavg
 declare -A dayworst
 
+printf "\n\nRunning each day %d times\n\n" $runs
+
+echo "Day         | Best (µs) | Avg (µs)  | Worst (µs)"
+echo "------------+-----------+-----------+--------------"
 
 for day in {1..25}
 do
@@ -26,12 +30,8 @@ do
   inputfile="./$year/input.day$day"
   if [ -f $file ]
   then
-    printf "\n%d\t" $day
-    
     for cnt in $( eval echo {1..$runs} )
     do
-      printf "."
-
       if [ ! -f $inputfile ]
       then
         retVal=`$file t`
@@ -52,46 +52,17 @@ do
     dayavg[$day]=$subt
     dayworst[$day]=$worst
 
+    printf "%s\t| %d\t| %d\t| %d\n" $day ${daybest[$day]} ${dayavg[$day]} ${dayworst[$day]}
+
     totalbest=$(($totalbest+$best));
     totalworst=$(($totalworst+$worst));
     totalavg=$(($totalavg+$subt));
   fi
 done
 
-printf "\n\nRunning each day %d times\n\n" $runs
+echo "------------+-----------+-----------+--------------"
+printf "Totals\t| %d\t| %d\t| %d\n\n" $totalbest $totalavg $totalworst
 
-printf "\tDay\t"
-for day in {1..25}
-do
-  printf "| %d\t" $day
-done
-printf "| Totals (µs)"
-printf "\n"
-echo "----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+--------------"
-
-printf "Best (µs)\t"
-for day in {1..25}
-do
-  printf "| %s\t" ${daybest[$day]}
-done
-printf "| %d" $totalbest
-
-printf "\nAvg (µs)\t"
-for day in {1..25}
-do
-  printf "| %s\t" ${dayavg[$day]}
-done
-printf "| %d" $totalavg
-
-printf "\nWorst (µs)\t"
-for day in {1..25}
-do
-  printf "| %s\t" ${dayworst[$day]}
-done
-printf "| %d" $totalworst
-
-printf "\n"
-echo "----------------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+-------+--------------"
-echo ""
 totalruntime=$(($totalruntime / 1000))
 printf "Total time taken %d ms\n\n" $totalruntime
+tabs -8

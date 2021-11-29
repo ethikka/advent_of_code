@@ -11,6 +11,8 @@ std::tuple<std::vector<int>,std::vector<int>,int> play_recursive_decks(std::vect
     if (recursive) {
       std::string key("");
       for(auto c: player[0]) key += std::to_string(c)+",";
+//      key += "@";
+//      for(auto c: player[1]) key += std::to_string(c)+",";
       if (previous_states.count(key)) return std::make_tuple(player[0], player[1], 0);
       previous_states.insert(key);
     }

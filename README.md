@@ -11,14 +11,14 @@ Build and run <year> <day> if the binary is older then the sourcefile, and wait 
 ---
 ```
 wartoy@MU-TH-R-182:~/src/advent_of_code$ ./time_all.sh 
-
 Running each day 10 times
 
 Day         | Best (µs) | Avg (µs)  | Worst (µs)
 ------------+-----------+-----------+--------------
-1           | 278       | 345       | 432
+1           | 280       | 311       | 353
+2           | 225       | 236       | 276
 ------------+-----------+-----------+--------------
-Totals      | 278       | 345       | 432
+Totals      | 505       | 547       | 629
 
-Total time taken 3 ms
+Total time taken 5 ms
 ```

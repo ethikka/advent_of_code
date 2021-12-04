@@ -5,13 +5,10 @@
 
 class board {
     std::vector<int> numbers;
-    std::vector<int> drawn;
   public:
     bool stop;
-
     board ()  {
-      int n(0);
-      for (int i = 0; i < 25; i++) {
+      for (int i = 0, n = 0; i < 25; i++) {
         std::cin >> n;
         numbers.push_back(n);
       }
@@ -26,18 +23,15 @@ class board {
     bool bingo() {
       for (int s: {0,5,10,15,20}) {
         bool has_bingo(true);
-        for (int c = 0; c < 5; c++)
-          has_bingo &= numbers[s+c] == 0;
+        for (int c: {0,1,2,3,4}) has_bingo &= numbers[s+c] == 0;
         if (has_bingo) return true;
       }
 
       for (int s: {0,1,2,3,4}) {
         bool has_bingo(true);
-        for (int c = 0; c < 5; c++)
-          has_bingo &= numbers[s+(c*5)] == 0;
+        for (int c: {0,5,10,15,20}) has_bingo &= numbers[s+c] == 0;
         if (has_bingo) return true;
       }
-
       return false;
     }
 
@@ -60,37 +54,26 @@ class board {
     }
   };
 
-bool bb(board b) {
-  return b.stop;
-}
-
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::pair<std::uintmax_t,std::uintmax_t> res;
   
   std::string line;
-  std::cin >> line; // read drawn numbers
+  std::cin >> line; 
   std::replace(line.begin(), line.end(), ',', ' '); 
 
-  int num;
   std::vector<board> boards;
-  while (!std::cin.eof()) {
-    board t;
-    boards.push_back(t);
-  }
+  while (!std::cin.eof()) { board t; boards.push_back(t); }
 
   std::istringstream ssl(line);
   int draw(0);
-  while (ssl >> draw) {
-    for(auto &b: boards) {
+  while (ssl >> draw) 
+    for(auto &b: boards) 
         if (!b.stop) {
           if (b.draw(draw)) {
-            if (res.first == 0) res.first = b.bingo_crc(draw); else res.second = b.bingo_crc(draw);
+            if (res.first == 0) res.first  = b.bingo_crc(draw); 
+            else                res.second = b.bingo_crc(draw); 
           }
-          // Uncomment to show bingocards    
-          //b.print();
+          //b.print();  // Uncomment to show bingocards    
         }
-    }
-  }
-
   return res;
 }

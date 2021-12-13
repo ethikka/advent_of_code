@@ -2,7 +2,6 @@
 #include <unordered_map>
 #include <vector>
 #include <queue>
-#include <thread>
 #include "../common/lib.h"
 
 template<typename T>

@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <map>
+#include <algorithm>
 #include "../common/lib.h"
 
 std::multimap<std::string,std::string> possible_paths;

@@ -6,41 +6,8 @@
 #include <map>
 #include <unordered_map>
 
-
-struct vector3 {
-  int x;
-  int y;
-  int z;
-};
-
-namespace std {
-  template<> struct std::hash<vector3> {
-    std::size_t operator()(const vector3& k)const {
-      return std::hash<int>()(k.x) ^ std::hash<int>()(k.y) ^ std::hash<int>()(k.z);
-    };
-  };
-}
-
-
 template<typename T>
 std::vector<T> offsets();
-
-/**  vector2 helper classes to use vector2 as key **/
-struct vector2 {
-  int x;
-  int y;
-};
-
-template<>
-std::vector<vector2> offsets() { return {{-1,-1},{-1, 0},{-1, 1},{ 0,-1},{ 0, 1},{ 1,-1},{ 1, 0},{ 1, 1}}; };
-vector2 operator +(const vector2 &lhs, const vector2 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y }; };
-bool operator ==(const vector2 &lhs, const vector2 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
-
-namespace std {
-  template<> struct std::hash<vector2> {
-    std::size_t operator()(const vector2& k)const { return hash<long long>()(((long long)k.x)^(((long long)k.y)<<32)); };
-  };
-}
 
 struct automata_options {
   int x_size;
@@ -51,6 +18,78 @@ struct automata_options {
   int (*custom_rule)(int, int, std::vector<int>);
 };
 
+#pragma region Key helpers
+/**  vector2 helper classes to use vector2 as key **/
+struct vector2 {
+  int x;
+  int y;
+};
+//--------------------------------------------------------------------------------------------------------------------------------
+
+template<>
+std::vector<vector2> offsets() { return {{-1,-1},{-1, 0},{-1, 1},{ 0,-1},{ 0, 1},{ 1,-1},{ 1, 0},{ 1, 1}}; };
+bool in_bounds(vector2 k, automata_options _opts) { return _opts.unbounded || (k.x >= 0 && k.x < _opts.x_size) && (k.y >= 0 && k.y < _opts.y_size); };
+vector2 operator +(const vector2 &lhs, const vector2 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y }; };
+bool operator ==(const vector2 &lhs, const vector2 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
+
+namespace std {
+  template<> struct std::hash<vector2> {
+    std::size_t operator()(const vector2& k)const { return hash<long long>()(((long long)k.x)^(((long long)k.y)<<32)); };
+  };
+}
+
+/**  vector3 helper classes to use vector3 as key **/
+struct vector3 {
+  int x;
+  int y;
+  int z;
+};
+
+template<>
+std::vector<vector3> offsets() { return {{ -1, -1, -1}, { -1, -1,  0},	{ -1, -1, +1},	{ -1,  0, -1},	{ -1,  0,  0},	{ -1,  0, +1},	{ -1, +1, -1},	{ -1, +1,  0},	{ -1, +1, +1},	
+                                         {  0, -1, -1},	{  0, -1,  0},	{  0, -1, +1},	{  0,  0, -1},                 	{  0,  0, +1},	{  0, +1, -1},	{  0, +1,  0},	{  0, +1, +1},	
+                                         { +1, -1, -1},	{ +1, -1,  0},	{ +1, -1, +1},	{ +1,  0, -1},	{ +1,  0,  0},	{ +1,  0, +1},	{ +1, +1, -1},	{ +1, +1,  0},	{ +1, +1, +1}}; };
+bool in_bounds(vector3 k, automata_options _opts) { return _opts.unbounded /* to do, bounds for vector3 */; };
+vector3 operator +(const vector3 &lhs, const vector3 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y, lhs.z+rhs.z }; };
+bool operator ==(const vector3 &lhs, const vector3 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z; };
+
+namespace std {
+  template<> struct std::hash<vector3> {
+    std::size_t operator()(const vector3& k)const { return std::hash<int>()(k.x) ^ std::hash<int>()(k.y) ^ std::hash<int>()(k.z); };
+  };
+}
+//--------------------------------------------------------------------------------------------------------------------------------
+
+/**  vector4 helper classes to use vector4 as key **/
+struct vector4 {
+  int x;
+  int y;
+  int z;
+  int w;
+};
+
+template<>
+std::vector<vector4> offsets() { return {{-1, -1, -1, -1},	{-1, -1, -1, +0},	{-1, -1, -1, +1},	{-1, -1, +0, -1},	{-1, -1, +0, +0},	{-1, -1, +0, +1},	{-1, -1, +1, -1},	{-1, -1, +1, +0},	{-1, -1, +1, +1},
+                                         {-1, +0, -1, -1},	{-1, +0, -1, +0},	{-1, +0, -1, +1},	{-1, +0, +0, -1},	{-1, +0, +0, +0},	{-1, +0, +0, +1},	{-1, +0, +1, -1},	{-1, +0, +1, +0},	{-1, +0, +1, +1},
+        	                               {-1, +1, -1, -1},	{-1, +1, -1, +0},	{-1, +1, -1, +1},	{-1, +1, +0, -1},	{-1, +1, +0, +0},	{-1, +1, +0, +1},	{-1, +1, +1, -1},	{-1, +1, +1, +0},	{-1, +1, +1, +1},
+	                                       {+0, -1, -1, -1},	{+0, -1, -1, +0},	{+0, -1, -1, +1},	{+0, -1, +0, -1},	{+0, -1, +0, +0},	{+0, -1, +0, +1},	{+0, -1, +1, -1},	{+0, -1, +1, +0},	{+0, -1, +1, +1},
+	                                       {+0, +0, -1, -1},	{+0, +0, -1, +0},	{+0, +0, -1, +1},	{+0, +0, +0, -1},	                  {+0, +0, +0, +1},	{+0, +0, +1, -1},	{+0, +0, +1, +0},	{+0, +0, +1, +1},	
+	                                       {+0, +1, -1, -1},	{+0, +1, -1, +0},	{+0, +1, -1, +1},	{+0, +1, +0, -1},	{+0, +1, +0, +0},	{+0, +1, +0, +1},	{+0, +1, +1, -1},	{+0, +1, +1, +0},	{+0, +1, +1, +1},	
+	                                       {+1, -1, -1, -1},	{+1, -1, -1, +0},	{+1, -1, -1, +1},	{+1, -1, +0, -1},	{+1, -1, +0, +0},	{+1, -1, +0, +1},	{+1, -1, +1, -1},	{+1, -1, +1, +0},	{+1, -1, +1, +1},
+        	                               {+1, +0, -1, -1},	{+1, +0, -1, +0},	{+1, +0, -1, +1},	{+1, +0, +0, -1},	{+1, +0, +0, +0},	{+1, +0, +0, +1},	{+1, +0, +1, -1},	{+1, +0, +1, +0},	{+1, +0, +1, +1},
+	                                       {+1, +1, -1, -1},	{+1, +1, -1, +0},	{+1, +1, -1, +1},	{+1, +1, +0, -1},	{+1, +1, +0, +0},	{+1, +1, +0, +1},	{+1, +1, +1, -1},	{+1, +1, +1, +0},	{+1, +1, +1, +1}}; };
+bool in_bounds(vector4 k, automata_options _opts) { return _opts.unbounded /* to do, bounds for vector4 */; };
+vector4 operator +(const vector4 &lhs, const vector4 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y, lhs.z+rhs.z, lhs.w+rhs.w }; };
+bool operator ==(const vector4 &lhs, const vector4 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; };
+
+namespace std {
+  template<> struct std::hash<vector4> {
+    std::size_t operator()(const vector4& k)const { return std::hash<int>()(k.x) ^ std::hash<int>()(k.y) ^ std::hash<int>()(k.z) ^ std::hash<int>()(k.w); };
+  };
+}
+//--------------------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
 template <class K, class V, int num>
 class automata {
   public:
@@ -59,8 +98,6 @@ class automata {
     automata_options _opts;
     std::unordered_map<K,V> current_gen;
   public:
-    bool in_bounds(K k) { return ((k.x >= 0 && k.x < _opts.x_size) && (k.y >= 0 && k.y < _opts.y_size)) || _opts.unbounded; };
-   
     void advance_generation() {
       /*
       Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -71,20 +108,15 @@ class automata {
       std::unordered_map<K,V> newstate;
       std::unordered_map<K,int> sums;
       for (auto e: current_gen) 
-        for(const auto i: offsets<K>()) {
-          K k = e.first + i;
-//          if (in_bounds(k)) 
-            sums[k] = sums[k]+1;
-        }
+        for(const auto i: offsets<K>()) 
+            sums[e.first + i]++;
 
-      int cb(0), ca(0);
       for (auto s: sums) {
-        if (in_bounds(s.first)) {
+        if (in_bounds(s.first, _opts)) {
             if (s.second == 3) newstate[s.first] = true;
             else if (s.second == 2 && current_gen[s.first]) newstate[s.first] = true;
         }
       }
-      current_gen.clear();
       current_gen = newstate;
     };
 

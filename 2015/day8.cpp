@@ -17,7 +17,6 @@ int escape(std::string input) {
   return ns.size()+2;
 }
 
-
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   int mem(0), chr(0), chrb(0);
   std::string line;

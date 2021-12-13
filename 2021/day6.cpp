@@ -18,7 +18,6 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     int nf(fish[0]);
     for (int ii = 0; ii < 8; ii++) fish[ii] = fish[ii+1];
     fish[6] += fish[8] = nf;
-    
     if (days == 79) for (auto f: fish) res.first += f;
   }
   for (auto f: fish) res.second += f;

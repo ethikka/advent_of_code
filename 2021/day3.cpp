@@ -15,7 +15,7 @@ int binstr_to_int(std::string s) {
 
 int f(bool oxy) {
   std::string str("");
-  for (int d = 0; d < input.front().size(); d++) {
+  for (int d = 0; d < (int)input.front().size(); d++) {
     int cnt(0), tot(0);
     for(auto l: input) {
       if (l.rfind(str, 0) == 0) {
@@ -41,8 +41,8 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     int t_gam(0), t_eps(0);
     for(auto l: input) 
       if (l[d] == '0') t_eps++; else t_gam++;
-    if (t_gam*2 > input.size()) gam += mult;
-    if (t_eps*2 > input.size()) eps += mult;
+    if (t_gam*2 > (int)input.size()) gam += mult;
+    if (t_eps*2 > (int)input.size()) eps += mult;
     mult *= 2;
   }
   return {gam*eps, f(true)*f(false)};

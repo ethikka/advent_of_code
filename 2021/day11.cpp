@@ -25,7 +25,6 @@ namespace std {
 
 class octoboard {
   private:
-    int generation;
     std::unordered_map<vector2, int> _energymap;
   public:
     octoboard() {

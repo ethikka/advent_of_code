@@ -14,7 +14,7 @@ class path {
   public:
     std::string last() { return route.back(); }
     bool canVisit(std::string n, bool part_b) {
-      int vc = route.size();
+      size_t vc = route.size();
       if (vc > 0 && route.back() == "end") return false;
       if (n[0] < 91) route.push_back(n);
       else if (std::count(route.begin(), route.end(), n) == 0) route.push_back(n); 

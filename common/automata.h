@@ -28,7 +28,7 @@ struct vector2 {
 
 template<>
 std::vector<vector2> offsets() { return {{-1,-1},{-1, 0},{-1, 1},{ 0,-1},{ 0, 1},{ 1,-1},{ 1, 0},{ 1, 1}}; };
-bool in_bounds(vector2 k, automata_options _opts) { return _opts.unbounded || (k.x >= 0 && k.x < _opts.x_size) && (k.y >= 0 && k.y < _opts.y_size); };
+bool in_bounds(vector2 k, automata_options _opts) { return _opts.unbounded || ((k.x >= 0 && k.x < _opts.x_size) && (k.y >= 0 && k.y < _opts.y_size)); };
 vector2 operator +(const vector2 &lhs, const vector2 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y }; };
 bool operator ==(const vector2 &lhs, const vector2 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
 

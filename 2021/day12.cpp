@@ -1,47 +1,31 @@
 #include <sstream>
-#include <vector>
 #include <queue>
 #include <map>
+#include <vector>
 #include <algorithm>
 #include "../common/lib.h"
 
-std::multimap<std::string,std::string> possible_paths;
+std::map<std::string,std::vector<std::string>> possible_paths;
 
-class path {
-  private:
-    std::vector<std::string> route;
-    bool small_dup = false;
-  public:
-    std::string last() { return route.back(); }
-    bool canVisit(std::string n, bool part_b) {
-      size_t vc = route.size();
-      if (vc > 0 && route.back() == "end") return false;
-      if (n[0] < 91) route.push_back(n);
-      else if (std::count(route.begin(), route.end(), n) == 0) route.push_back(n); 
-      else if (part_b) 
-        if (!small_dup && (n != "start") ) {
-          small_dup = true;
-          route.push_back(n);
-        }
-      return route.size() != vc;
-    }
-};
-
-struct work {
-  path p;
-  std::string nd;
-};
-
-int64_t run(bool part_b) {
-  path _p;
+int64_t run2(bool part_b) {
   int64_t res(0);
-  std::queue<work> q;
-  q.push({ _p, "start" });
+  std::queue<std::string> q;
+  q.push({ "start" });
   while (!q.empty()) {
-    auto w = q.front();
+    std::string w = q.front();
     q.pop();
-    if (w.nd == "end") res++;
-    if (w.p.canVisit(w.nd, part_b)) for (auto p: possible_paths) if (p.first == w.p.last()) q.push({w.p, p.second});
+    std::string l = (w.find_last_of('-') == std::string::npos) ? w : w.substr(w.find_last_of('-')+1);
+    if (l == "end") res++;
+    else 
+      for (std::string p: possible_paths[l]) {
+        std::string s = "";
+        if (p[0] < 91) q.push({w + "-" + p});
+        else {
+          size_t pp = w.find(p);
+          if (pp == std::string::npos) q.push({w + "-" + p});
+          else if (part_b) if (w[0] != '@') if (w.find(p, pp+1) == std::string::npos) q.push({'@' + w + "-" + p});
+        }
+      }
   }
   return res;
 }
@@ -50,8 +34,9 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::string line;
   while (std::cin >> line) {
     int p = line.find_first_of('-');
-    possible_paths.insert({line.substr(0,p), line.substr(p+1)});
-    possible_paths.insert({line.substr(p+1), line.substr(0,p)});
+    std::string from(line.substr(0,p)), to(line.substr(p+1));
+    if (to   != "start") possible_paths[from].push_back(to);
+    if (from != "start") possible_paths[to].push_back(from);
   }
-  return { run(false), run(true)};
+  return { run2(false), run2(true) };
 }

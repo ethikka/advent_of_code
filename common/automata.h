@@ -9,9 +9,9 @@
 template<typename T>
 std::vector<T> offsets();
 
+template<typename T>
 struct automata_options {
-  int x_size;
-  int y_size;
+  T bounds;
   bool wraparound;
   int num_layers;
   bool unbounded;
@@ -28,7 +28,7 @@ struct vector2 {
 
 template<>
 std::vector<vector2> offsets() { return {{-1,-1},{-1, 0},{-1, 1},{ 0,-1},{ 0, 1},{ 1,-1},{ 1, 0},{ 1, 1}}; };
-bool in_bounds(vector2 k, automata_options _opts) { return _opts.unbounded || ((k.x >= 0 && k.x < _opts.x_size) && (k.y >= 0 && k.y < _opts.y_size)); };
+bool in_bounds(vector2 k, automata_options<vector2> _opts) { return _opts.unbounded || ((k.x >= 0 && k.x < _opts.bounds.x) && (k.y >= 0 && k.y < _opts.bounds.y)); };
 vector2 operator +(const vector2 &lhs, const vector2 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y }; };
 bool operator ==(const vector2 &lhs, const vector2 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
 
@@ -49,7 +49,7 @@ template<>
 std::vector<vector3> offsets() { return {{ -1, -1, -1}, { -1, -1,  0},	{ -1, -1, +1},	{ -1,  0, -1},	{ -1,  0,  0},	{ -1,  0, +1},	{ -1, +1, -1},	{ -1, +1,  0},	{ -1, +1, +1},	
                                          {  0, -1, -1},	{  0, -1,  0},	{  0, -1, +1},	{  0,  0, -1},                 	{  0,  0, +1},	{  0, +1, -1},	{  0, +1,  0},	{  0, +1, +1},	
                                          { +1, -1, -1},	{ +1, -1,  0},	{ +1, -1, +1},	{ +1,  0, -1},	{ +1,  0,  0},	{ +1,  0, +1},	{ +1, +1, -1},	{ +1, +1,  0},	{ +1, +1, +1}}; };
-bool in_bounds(vector3 k, automata_options _opts) { return _opts.unbounded /* to do, bounds for vector3 */; };
+bool in_bounds(vector3 k, automata_options<vector3> _opts) { return _opts.unbounded || ((k.x >= 0 && k.x < _opts.bounds.x) && (k.y >= 0 && k.y < _opts.bounds.y) && (k.z >= 0 && k.z < _opts.bounds.z)); };
 vector3 operator +(const vector3 &lhs, const vector3 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y, lhs.z+rhs.z }; };
 bool operator ==(const vector3 &lhs, const vector3 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z; };
 
@@ -78,7 +78,7 @@ std::vector<vector4> offsets() { return {{-1, -1, -1, -1},	{-1, -1, -1, +0},	{-1
 	                                       {+1, -1, -1, -1},	{+1, -1, -1, +0},	{+1, -1, -1, +1},	{+1, -1, +0, -1},	{+1, -1, +0, +0},	{+1, -1, +0, +1},	{+1, -1, +1, -1},	{+1, -1, +1, +0},	{+1, -1, +1, +1},
         	                               {+1, +0, -1, -1},	{+1, +0, -1, +0},	{+1, +0, -1, +1},	{+1, +0, +0, -1},	{+1, +0, +0, +0},	{+1, +0, +0, +1},	{+1, +0, +1, -1},	{+1, +0, +1, +0},	{+1, +0, +1, +1},
 	                                       {+1, +1, -1, -1},	{+1, +1, -1, +0},	{+1, +1, -1, +1},	{+1, +1, +0, -1},	{+1, +1, +0, +0},	{+1, +1, +0, +1},	{+1, +1, +1, -1},	{+1, +1, +1, +0},	{+1, +1, +1, +1}}; };
-bool in_bounds(vector4 k, automata_options _opts) { return _opts.unbounded /* to do, bounds for vector4 */; };
+bool in_bounds(vector4 k, automata_options<vector4> _opts) { return _opts.unbounded || ((k.x >= 0 && k.x < _opts.bounds.x) && (k.y >= 0 && k.y < _opts.bounds.y) && (k.z >= 0 && k.z < _opts.bounds.z) && (k.z >= 0 && k.z < _opts.bounds.w)); };
 vector4 operator +(const vector4 &lhs, const vector4 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y, lhs.z+rhs.z, lhs.w+rhs.w }; };
 bool operator ==(const vector4 &lhs, const vector4 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; };
 
@@ -93,9 +93,9 @@ namespace std {
 template <class K, class V, int num>
 class automata {
   public:
-    automata<K,V,num>(automata_options opts) { _opts = opts; };
+    automata<K,V,num>(automata_options<K> opts) { _opts = opts; };
   private:
-    automata_options _opts;
+    automata_options<K> _opts;
     std::unordered_map<K,V> current_gen;
   public:
     void advance_generation() {
@@ -129,7 +129,7 @@ class automata {
       for (auto n: current_gen) 
         if (n.second)
           printf("\33[%d;%dH0", n.first.y+2, n.first.x+1);
-      printf("\33[39;49m\n\33[%d;%dH", _opts.y_size+3, 0);
+      printf("\33[39;49m\n\33[%d;%dH", _opts.bounds.y+3, 0);
       std::cout << std::flush;
     };    
 
@@ -142,9 +142,9 @@ class automata {
 
 class rgb_automata {
   public:
-    rgb_automata(automata_options opts) { _opts = opts; };
+    rgb_automata(automata_options<vector2> opts) { _opts = opts; };
   private:
-    automata_options _opts;
+    automata_options<vector2> _opts;
     std::unordered_map<int,std::unordered_map<int,int>> current_gen;
   public:
     void advance_generation() {
@@ -155,10 +155,10 @@ class rgb_automata {
       Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
       */
       std::unordered_map<int,std::unordered_map<int,int>> newstate;
-      for (int x = 0; x < _opts.x_size; x++)
-        for (int y = 0; y < _opts.y_size; y++) {
+      for (int x = 0; x < _opts.bounds.x; x++)
+        for (int y = 0; y < _opts.bounds.y; y++) {
           auto v = count_adjacent(x, y);
-          int key((x*_opts.x_size)+y);
+          int key((x*_opts.bounds.x)+y);
           for (int c = 0; c < _opts.num_layers; c++) {
             if (_opts.custom_rule) {
               newstate[key][c] = _opts.custom_rule(c, current_gen[key][c], v);
@@ -169,9 +169,9 @@ class rgb_automata {
             }
           }
         }
-      for (int x = 0; x < _opts.x_size; x++)
-        for (int y = 0; y < _opts.y_size; y++) {
-          int key((x*_opts.x_size)+y);
+      for (int x = 0; x < _opts.bounds.x; x++)
+        for (int y = 0; y < _opts.bounds.y; y++) {
+          int key((x*_opts.bounds.x)+y);
           for (int c = 0; c < _opts.num_layers; c++)
             current_gen[key][c] = newstate[key][c];
         }
@@ -182,9 +182,9 @@ class rgb_automata {
       for(auto i: std::vector<std::tuple<int,int>>{{-1,-1},{-1, 0},{-1, 1},{ 0,-1},{ 0, 1},{ 1,-1},{ 1, 0},{ 1, 1}}) {
         int xo = x+std::get<0>(i);
         int yo = y+std::get<1>(i);
-        int key = (xo*_opts.x_size)+yo;
+        int key = (xo*_opts.bounds.x)+yo;
         if (_opts.wraparound) 
-          key = (((xo+_opts.x_size)%_opts.x_size)*_opts.x_size)+((yo+_opts.y_size)%_opts.y_size);
+          key = (((xo+_opts.bounds.x)%_opts.bounds.x)*_opts.bounds.x)+((yo+_opts.bounds.y)%_opts.bounds.y);
         for(int c = 0; c< _opts.num_layers; c++)
           if (current_gen[key][c] == 255) res[c]++;
       }
@@ -193,11 +193,11 @@ class rgb_automata {
 
     void clear_to_color(int r, int g, int b) {
       for (int c = 0; c < 3; c++)
-        for (int x = 0; x < _opts.x_size; x++)
-          for (int y = 0; y < _opts.y_size; y++) {
-            int key = (x*_opts.x_size)+y;
+        for (int x = 0; x < _opts.bounds.x; x++)
+          for (int y = 0; y < _opts.bounds.y; y++) {
+            int key = (x*_opts.bounds.x)+y;
             if (_opts.wraparound) 
-              key = (((x+_opts.x_size) %_opts.x_size)*_opts.x_size)+((y+_opts.y_size)%_opts.y_size);
+              key = (((x+_opts.bounds.x) %_opts.bounds.x)*_opts.bounds.x)+((y+_opts.bounds.y)%_opts.bounds.y);
             current_gen[key][0] = r;
             current_gen[key][1] = g;
             current_gen[key][2] = b;
@@ -206,9 +206,9 @@ class rgb_automata {
 
     void place_pixels(int x, int y, std::vector<std::pair<int,int>> pixels, int r, int g, int b) {
       for (auto p: pixels) {
-        int key = ((x+p.first)*_opts.x_size)+(y+p.second);
+        int key = ((x+p.first)*_opts.bounds.x)+(y+p.second);
         if (_opts.wraparound) 
-          key = ((((x+p.first)+_opts.x_size) %_opts.x_size)*_opts.x_size)+(((y+p.second)+_opts.y_size)%_opts.y_size);
+          key = ((((x+p.first)+_opts.bounds.x) %_opts.bounds.x)*_opts.bounds.x)+(((y+p.second)+_opts.bounds.y)%_opts.bounds.y);
         if (r != 0) current_gen[key][0] = r;
         if (g != 0) current_gen[key][1] = g;
         if (b != 0) current_gen[key][2] = b;
@@ -217,9 +217,9 @@ class rgb_automata {
 
   public: // Debugging functions
     void print_automata() {
-      for (int x = 0; x < _opts.x_size; x++) 
-        for (int y = 0; y < _opts.y_size; y++)
-          printf("\33[%d;%dH\33[48;2;%d;%d;%dm  ", y+2, (x*2)+2, current_gen[(x*_opts.x_size)+y][0], current_gen[(x*_opts.x_size)+y][1], current_gen[(x*_opts.x_size)+y][2]);
+      for (int x = 0; x < _opts.bounds.x; x++) 
+        for (int y = 0; y < _opts.bounds.y; y++)
+          printf("\33[%d;%dH\33[48;2;%d;%d;%dm  ", y+2, (x*2)+2, current_gen[(x*_opts.bounds.x)+y][0], current_gen[(x*_opts.bounds.x)+y][1], current_gen[(x*_opts.bounds.x)+y][2]);
       printf("\33[39;49m\n");
       std::cout << std::flush;
     };

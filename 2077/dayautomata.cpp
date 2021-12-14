@@ -6,7 +6,7 @@
 #include "../common/lib.h"
 #include "../common/automata.h"
 
-std::vector<std::vector<std::pair<int,int>>> shapes{
+std::vector<std::vector<vector2>> shapes{
   /*glider*/{{2,0},{2,1},{2,2},{1,2},{0,1}},
   /*glider*/{{0,0},{0,1},{0,2},{1,2},{2,1}},
   /*glider*/{{2,2},{2,1},{2,0},{1,0},{0,1}},
@@ -30,18 +30,18 @@ int custom_rules(int layer, int current_val, std::vector<int> counts) {
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::srand(std::time(NULL));
-  //automata<vector3, int, 3> a({32, 8, true, 3/*, &custom_rules*/});
-  rgb_automata a({32, 8, true, 3/*, &custom_rules*/});
+  automata<vector2, int, 3> a({{32, 8}, true, 3, false/*, &custom_rules*/});
+  //rgb_automata a({{32, 8}, true, 3/*, &custom_rules*/});
   printf("\33c");
   for (int i = 0; i < 16; i++) 
-    a.place_pixels((rand()%32), (rand()%16), shapes[rand()%shapes.size()], (rand()%2)*255, (rand()%2)*255, (rand()%2)*255);
+    a.place_pixels({(rand()%32), (rand()%16)}, shapes[rand()%shapes.size()], (rand()%2)*255/*, (rand()%2)*255, (rand()%2)*255*/);
   
   int count(0);
   while (count++ < 500) {
-    a.print_automata();
+    a.print_automata(count);
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     a.advance_generation();
   }
-  a.print_automata();
+  a.print_automata(count);
   return {0,0};
 }

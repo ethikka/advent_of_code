@@ -7,12 +7,11 @@
 #include "../common/lib.h"
 
 typedef std::pair<int,int> point;
+std::map<point, int> dm, cdm;
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::pair<std::uintmax_t,std::uintmax_t> res;
   char c;
-  std::map<point, int> dm;
-  std::map<point, int> cdm;
   int x(1), y(1);
   while (std::cin >> std::noskipws >> c) 
     switch(c) {
@@ -30,14 +29,14 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
         }
 
   int x2(x*5), y2(y*5);
-
-  std::queue<point> q;
+  auto Compare = [](point &a, point &b) { return (cdm[a] >= cdm[b]); };
+  std::priority_queue<point, std::vector<point>, decltype(Compare)> q(Compare);
   q.push({1,1});
   while (!q.empty()) {
-    auto w = q.front();
+    auto w = q.top();
     q.pop();
-    for (point p: std::vector<std::pair<int,int>> {{-1,0},{0,-1},{0,1},{1,0}}) {
-      point np(w.first+p.first, w.second+p.second);
+    for (point p: std::vector<point> {{-1,0},{0,-1},{0,1},{1,0}}) {
+      point np = {w.first+p.first, w.second+p.second};
       if (!(np.first < 1 || np.first > x2 || np.second < 1 || np.second > y2) && (cdm[np] > (cdm[w]+dm[np]) || cdm[np] == 0)) {
         cdm[np] = cdm[w]+dm[np];
         q.push(np);

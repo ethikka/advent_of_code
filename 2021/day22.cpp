@@ -14,19 +14,18 @@ struct cube {
   }
 };
 
-bool intersects(cube& a, cube& b){ // Optimized by GDB the homie
+bool intersects(cube& a, cube& b){ 
   return !(a.xe<b.xs || b.xe<a.xs || a.ye<b.ys || b.ye<a.ys|| a.ze<b.zs || b.ze<a.zs);
 }
 
 void subtract(cube& a, cube& b, std::vector<cube>& build){
-  cube c(  std::max(a.xs, b.xs), std::min(a.xe, b.xe),std::max(a.ys, b.ys),
-      std::min(a.ye, b.ye),std::max(a.zs, b.zs), std::min(a.ze, b.ze));
-  if(a.zs<c.zs)  build.emplace_back(a.xs, a.xe, a.ys, a.ye, a.zs, c.zs-1); // bottom part
-  if(c.ze<a.ze)  build.emplace_back(a.xs, a.xe, a.ys, a.ye, c.ze+1, a.ze); // top part
-  if(a.xs<c.xs)  build.emplace_back(a.xs, c.xs-1, a.ys, a.ye, c.zs, c.ze); // middle portions
-  if(c.xe<a.xe)  build.emplace_back(c.xe+1, a.xe, a.ys, a.ye, c.zs, c.ze);
-  if(a.ys<c.ys)  build.emplace_back(c.xs, c.xe, a.ys, c.ys-1, c.zs, c.ze);
-  if(c.ye<a.ye)  build.emplace_back(c.xs, c.xe, c.ye+1, a.ye, c.zs, c.ze);
+  cube c(std::max(a.xs, b.xs), std::min(a.xe, b.xe), std::max(a.ys, b.ys), std::min(a.ye, b.ye),std::max(a.zs, b.zs), std::min(a.ze, b.ze));
+  if(a.zs<c.zs) build.emplace_back(a.xs, a.xe, a.ys, a.ye, a.zs, c.zs-1);
+  if(c.ze<a.ze) build.emplace_back(a.xs, a.xe, a.ys, a.ye, c.ze+1, a.ze);
+  if(a.xs<c.xs) build.emplace_back(a.xs, c.xs-1, a.ys, a.ye, c.zs, c.ze);
+  if(c.xe<a.xe) build.emplace_back(c.xe+1, a.xe, a.ys, a.ye, c.zs, c.ze);
+  if(a.ys<c.ys) build.emplace_back(c.xs, c.xe, a.ys, c.ys-1, c.zs, c.ze);
+  if(c.ye<a.ye) build.emplace_back(c.xs, c.xe, c.ye+1, a.ye, c.zs, c.ze);
 }
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {

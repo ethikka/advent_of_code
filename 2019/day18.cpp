@@ -105,9 +105,7 @@ void search2(keyset &found_keys, std::vector<point> position, int steps) {
 }
 
 void solve() {
-  char inp;
-  int res1(0), res2(0);
-  int x(0);
+  int res1(0);
 
   point playerpos;
   std::string s;

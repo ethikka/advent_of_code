@@ -160,7 +160,6 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
       grid[x][y] = 0;
 
   res.first = 1;
-  int startId;
   for(auto& t: tiles) {
     t.second.examine();
     if (t.second.isCorner) {

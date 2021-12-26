@@ -53,7 +53,6 @@ class herd {
 };
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
-  std::pair<std::uintmax_t,std::uintmax_t> res;
   herd h;
   char c;
   int x(0), y(0);

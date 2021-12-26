@@ -56,12 +56,12 @@ public:
   }
 
   int64_t value() {
-    int64_t r(0);
+    int64_t r(subpackets.size() > 0 ? subpackets[0].value():0);
     switch (id) {
-      case 0:                            for(auto p: subpackets) r += p.value();             return r;
-      case 1: r = 1;                     for(auto p: subpackets) r *= p.value();             return r;
-      case 2: r = subpackets[0].value(); for(auto s: subpackets) r = std::min(r, s.value()); return r;
-      case 3: r = subpackets[0].value(); for(auto s: subpackets) r = std::max(r, s.value()); return r;
+      case 0: for(int i=1; i < subpackets.size(); i++) r += subpackets[i].value(); return r;
+      case 1: for(int i=1; i < subpackets.size(); i++) r *= subpackets[i].value(); return r;
+      case 2: for(auto s: subpackets) r = std::min(r, s.value());                  return r;
+      case 3: for(auto s: subpackets) r = std::max(r, s.value());                  return r;
       case 4: return literal; 
       case 5: return (subpackets[0].value()  > subpackets[1].value()) ? 1 : 0; 
       case 6: return (subpackets[0].value()  < subpackets[1].value()) ? 1 : 0; 

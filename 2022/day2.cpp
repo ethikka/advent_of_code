@@ -14,9 +14,9 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     res.first += p2i;
 
     switch(p2i) {
-      case 1: res.second += 0 + p1i-1; if (p1i == 1) res.second += 3; break;
-      case 2: res.second += 3 + p1i; break;
-      case 3: res.second += 6 + p1i+1; if (p1i == 3) res.second -= 3; break;
+      case 1: res.second += p1i-1; if (p1i == 1) res.second += 3; break;
+      case 2: res.second += p1i+3; break;
+      case 3: res.second += p1i+7; if (p1i == 3) res.second -= 3; break;
     }
   }
   return res;

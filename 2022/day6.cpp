@@ -11,6 +11,7 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   for (int i = 0; i < chars.size()-3 && (res.first == 0 || res.second == 0); i++) {
     std::set<char> test;
     for (int x = 0; x < 14; x++) {
+      if (test.count(chars.at(i+x)) > 0) break;
       test.emplace(chars.at(i+x));
       if (x == 3 && test.size() == 4 && res.first == 0) res.first = i+4;
     }

@@ -1,7 +1,7 @@
 # specify compiler
 GXX=clang++ 
 YEAR=2020
-CFLAGS = -O3 -g -Wfatal-errors -std=c++2a
+CFLAGS = -O3 -Wfatal-errors -std=c++2a
 ADDITIONAL_FILES=$(addprefix ./$(YEAR)/,$(subst :, ,$(ADD)))
 ADDITIONAL_FLAGS=$(subst :, ,$(FLAGS))
 

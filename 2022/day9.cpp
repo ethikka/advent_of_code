@@ -5,7 +5,7 @@
 #include "../common/lib.h"
 
 struct pos {
-  pos(int _x, int _y) { x = _x; y = _y;}
+  pos(int _x, int _y) { x = _x; y = _y; }
   int x;
   int y;
   std::string key() { return std::to_string(y)+";"+std::to_string(x); };

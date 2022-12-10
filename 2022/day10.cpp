@@ -22,10 +22,11 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   if (!output_for_timing) {
     int pxl(0);
     for (auto spr: timeline) {
-      std::cout << ((abs(spr.second-(pxl++)) < 2) ? "O": " ");
+      std::cout << ((abs(spr.second-(pxl++)) < 2) ? "|": " ");
       pxl %= 40;
       if (pxl == 0) std::cout << std::endl;
     }
   }              
+  std::cout << std::endl;
   return res;
 }

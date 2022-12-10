@@ -8,12 +8,12 @@ struct pos {
   pos(int _x, int _y) { x = _x; y = _y; }
   int x;
   int y;
-  int64_t key() { return y*100000+x; };
+  int32_t key() { return y*10000+x; };
   void move(int _xo, int _yo) { x += _xo; y += _yo; };
 };
 std::map<char, pos> offsets = { {'L', {-1, 0}}, {'R', { 1, 0}}, {'U', { 0,-1}}, {'D', { 0, 1}}};
 
-void ouroubourous(std::vector<pos> &knots, char dir, int steps, std::set<int64_t> &positions_a, std::set<int64_t> &positions_b) {
+void ouroubourous(std::vector<pos> &knots, char dir, int steps, std::set<int32_t> &positions_a, std::set<int32_t> &positions_b) {
   for (int s = 0; s < steps; s++) {
     for (auto k = 0; k < knots.size(); k++) {
       if (k == 0) knots[k].move(offsets.at(dir).x, offsets.at(dir).y);
@@ -29,8 +29,7 @@ void ouroubourous(std::vector<pos> &knots, char dir, int steps, std::set<int64_t
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::vector<pos> knots;
-  std::set<int64_t> tail_positions_a, tail_positions_b;
-  //std::map<int,std::set<int>> tail_positions_a, tail_positions_b;
+  std::set<int32_t> tail_positions_a, tail_positions_b;
   for (int i = 0; i < 10; i++) knots.push_back(pos(0,0));
 
   char dir;

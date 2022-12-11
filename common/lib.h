@@ -40,6 +40,8 @@ std::pair<std::uintmax_t,std::uintmax_t> solve();
 
 /* Ugly, but effective ;-)) */
 int main(int argc, char *argv[]) {
+  std::string s = argv[0];
+  s += " ";
   output_for_timing = (argc > 1);
   post_solve(solve());
 }

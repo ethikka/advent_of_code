@@ -28,30 +28,27 @@ std::vector<pos> lerp(pos from, pos to) {
 
 std::vector<pos> offsets = {{0, 1}, { -1, 1}, { 1, 1}};
 
-bool simulate(pos ss, std::map<pos, char> &rocks, bool inf) {
-  pos s(ss);
+bool simulate(pos s, std::map<pos, char> &rocks, bool inf) {
   while (true) {
     bool bo(true);
     for (auto o: offsets) {
-      if (bo) {
-        pos ns=s+o;
-        switch(rocks[ns]) {
+      if (bo) 
+        switch(rocks[s+o]) {
           case '#':
           case 'x':
           case 'o': break;
           default: {
-            if (ns.y > 162) { 
-              rocks[ns] = 'x';
+            if ((s+o).y > 162) { 
+              rocks[s+o] = 'x';
               if (res.first == 0) for (auto r: rocks) if (r.second == 'o') res.first++;
             }
             else {
-              s = ns;
+              s = s+o;
               if (inf) rocks[s] = '~';
               bo = false;
             };
           }
         }
-      }
     }
     if (bo) { if (rocks[s] == 'o') return false; rocks[s] = 'o'; return true; }
   }
@@ -61,8 +58,6 @@ bool simulate(pos ss, std::map<pos, char> &rocks, bool inf) {
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::string line;
   std::map<pos, char> rocks;
-  int startx(500), starty(0);
-  rocks[{startx,starty}] = '+';
 
   while (std::getline(std::cin, line)) {
     std::stringstream l(line);
@@ -81,15 +76,7 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   while (!q.empty()) {
     int64_t w = q.front();
     q.pop();
-
-    pos s(startx, starty);
-    if (simulate(s, rocks, false)) {
-      q.emplace(w+1);
-      if (w % 10000 == 0) {
-        int64_t total(0);
-        for (auto r: rocks) if (r.second == 'o') total++;
-      }
-    }
+    if (simulate({500, 0}, rocks, false)) q.emplace(w+1);
     res.second = w-1;
   }
   return res;

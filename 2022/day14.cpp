@@ -92,8 +92,5 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     }
     res.second = w-1;
   }
-
-
-
   return res;
 }

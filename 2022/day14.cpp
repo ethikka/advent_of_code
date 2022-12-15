@@ -4,6 +4,8 @@
 #include <queue>
 #include "../common/lib.h"
 
+std::pair<std::uintmax_t,std::uintmax_t> res(0,0);
+ 
 struct pos { 
   pos(int _x, int _y) { x = _x; y = _y; }
   pos(std::stringstream inp) { char d; inp >> x >> d >> y; }
@@ -24,34 +26,44 @@ std::vector<pos> lerp(pos from, pos to) {
   return res;
 };
 
-std::vector<pos> offsets = {{ -1, 1}, { 1, 1}, {0, 1}};
+std::vector<pos> offsets = {{0, 1}, { -1, 1}, { 1, 1}};
 
-bool simulate(pos s, std::map<pos, char> &rocks) {
+bool simulate(pos ss, std::map<pos, char> &rocks, bool inf) {
+  pos s(ss);
   while (true) {
-    bool miss(true);
+    bool bo(true);
     for (auto o: offsets) {
-      pos ns=s+o;
-      if (rocks.find(ns) == rocks.end()) {
-        if (ns.y > 162) return false;
-        s = ns;
-        miss &= false;
-      } else 
-        miss &= true;
+      if (bo) {
+        pos ns=s+o;
+        switch(rocks[ns]) {
+          case '#':
+          case 'x':
+          case 'o': break;
+          default: {
+            if (ns.y > 162) { 
+              rocks[ns] = 'x';
+              if (res.first == 0) for (auto r: rocks) if (r.second == 'o') res.first++;
+            }
+            else {
+              s = ns;
+              if (inf) rocks[s] = '~';
+              bo = false;
+            };
+          }
+        }
+      }
     }
-    if (miss) { 
-      rocks[s] = 'o';
-      break;
-    }
+    if (bo) { if (rocks[s] == 'o') return false; rocks[s] = 'o'; return true; }
   }
   return true;
 }
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
-  std::pair<std::uintmax_t,std::uintmax_t> res;
   std::string line;
   std::map<pos, char> rocks;
   int startx(500), starty(0);
   rocks[{startx,starty}] = '+';
+
   while (std::getline(std::cin, line)) {
     std::stringstream l(line);
     std::string pl, pr;
@@ -61,6 +73,7 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
       pl = pr;
       l >> pr >> pr;
     } while (!l.eof());
+    for (auto p: lerp(std::stringstream(pl), std::stringstream(pr))) rocks[p] = '#';
   }
  
   std::queue<int64_t> q;
@@ -70,18 +83,17 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     q.pop();
 
     pos s(startx, starty);
-    if (simulate(s, rocks)) q.emplace(w+1);
-    else                    res.first = w;
+    if (simulate(s, rocks, false)) {
+      q.emplace(w+1);
+      if (w % 10000 == 0) {
+        int64_t total(0);
+        for (auto r: rocks) if (r.second == 'o') total++;
+      }
+    }
+    res.second = w-1;
   }
 
-  // Print the mofo
-  for (int y = 0; y < 161; y++) {
-    for (int x = 473; x < 578; x++) 
-    if (rocks.find({x, y}) != rocks.end()) std::cout << rocks[{x,y}]; else std::cout << '.';
-    std::cout << std::endl;
-  }
+
 
   return res;
 }
-
-// 445 too low

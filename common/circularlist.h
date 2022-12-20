@@ -12,5 +12,6 @@ namespace tbb {
       T front() { return buffer[head]; }
       T front_and_next() { int oh(head); head = (head + 1) % buffer.size(); return buffer[oh]; }
       size_t size() { return buffer.size(); }  
+      std::vector<T> get_raw_vector() { return buffer; }
   };
 }

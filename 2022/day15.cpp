@@ -8,34 +8,46 @@ struct pos {
   int64_t y;
 };
 
+std::set<pos> border;
+bool operator<(const pos& a, const pos& b) { if(a.y == b.y) return a.x < b.x; return a.y < b.y; };
+
 struct sensor {
   pos position;
   pos closest_beacon;
   int md;
 
-  int64_t conditional_add(bool conditional, bool part_2, int64_t val) {
-    if (conditional && !part_2) return val;
-    if (part_2 && val >= 0 && val <= 4000000 && conditional) return val;
-    return -9999999;
+  int64_t conditional_add(bool conditional, int64_t val) {
+    if (conditional) return val;
+    return 0;
   }
 
-  void no_beacons(int64_t row, std::set<int64_t> &invalid_spots, bool part_2) {
+  void no_beacons(int64_t row, std::set<int64_t> &invalid_spots) {
     int64_t xx = std::abs(position.y-row);
-    if (part_2) std::cout << xx << std::endl;
     if (xx < md) {
       for (int i = 0; i <= (md-xx); i++) {
-          invalid_spots.emplace(conditional_add((row != closest_beacon.y || (row == closest_beacon.y && closest_beacon.x != position.x+i)), part_2, position.x+i));
-          invalid_spots.emplace(conditional_add((row != closest_beacon.y || (row == closest_beacon.y && closest_beacon.x != position.x-i)), part_2, position.x-i));
+          invalid_spots.emplace(conditional_add((row != closest_beacon.y || (row == closest_beacon.y && closest_beacon.x != position.x+i)), position.x+i));
+          invalid_spots.emplace(conditional_add((row != closest_beacon.y || (row == closest_beacon.y && closest_beacon.x != position.x-i)), position.x-i));
         }
       }
   };
-  void print() { std::cout << position.x << "," << position.y << " | " << closest_beacon.x << "," << closest_beacon.y << "  " << md << std::endl; };
+
+  bool in_range(pos b) { return md >= std::abs(position.x-b.x)+std::abs(position.y-b.y); };
+  bool between(int64_t c, int64_t min, int64_t max) { return (c >= min && c <= max); }
+
+  void generate_border() {
+    int mdx = md+1;
+    for (int y = mdx, x = 0; x <= mdx; y--, x++) {
+      if (between(position.x+x, 0, 4000000) && between(position.y+y, 0, 4000000)) border.emplace(pos {position.x+x, position.y+y});
+      if (between(position.x+x, 0, 4000000) && between(position.y-y, 0, 4000000)) border.emplace(pos {position.x+x, position.y-y});
+      if (between(position.x-x, 0, 4000000) && between(position.y+y, 0, 4000000)) border.emplace(pos {position.x-x, position.y+y});
+      if (between(position.x-x, 0, 4000000) && between(position.y-y, 0, 4000000)) border.emplace(pos {position.x-x, position.y-y});
+    }
+  };
 };
 
 std::istream &operator>>(std::istream &is, sensor &s)
 {
   std::string in, xx, yy;
-  //Sensor at x=2, y=18: closest beacon is at x=-2, y=15  
   is >> in >> in >> xx >> yy >> in >> in >> in >> in;
   s.position.x = std::stoi(xx.substr(2, xx.size()-3));
   s.position.y = std::stoi(yy.substr(2, yy.size()-3));
@@ -57,15 +69,17 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     sensors.push_back(s);
   }
     
-  for (auto s: sensors) {
-    s.no_beacons(2000000, invalid_spots, false);
-  }
+  for (auto s: sensors) s.no_beacons(2000000, invalid_spots);
   res.first = invalid_spots.size()-1;
 
-  invalid_spots.clear();
-  for (auto s: sensors)  
-    s.no_beacons(0, invalid_spots, true);
-  std::cout << invalid_spots.size()-1;
-  //4000000
+  for (auto s: sensors) s.generate_border();
+  for (auto p: border) {
+    bool can_see(false);
+    for (auto s: sensors) {
+      can_see |= s.in_range(p);
+      if (can_see) break;
+    }
+    if (!can_see) return { res.first, (p.x*4000000)+p.y };
+  }
   return res;
 }

@@ -32,14 +32,11 @@ vector2 check_node(vector2 c, std::unordered_map<vector2,bool> current_gen) {
     if (can_place) possible_positions.push_back(rotation[i]);
   };
   if (possible_positions.size() == 4 || possible_positions.size() == 0) return c;
-  else {
-
-    return c+offsets.find(possible_positions.front())->second;
-  }
+  else                                                                  return c+offsets.find(possible_positions.front())->second;
 };
 
 bool check_change(vector2 c, std::vector<vector2> old_spots) {
-  if (c.x == old_spots.front().x && c.y == old_spots.front().y) return false;
+  if (c == old_spots.front()) return false;
   return (old_spots.size() == 1);
 };
 
@@ -62,7 +59,6 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   while (true) {
     if (count == 10) res.first = a.box_size()-a.get_raw().size();
     a.advance_generation();
-    std::cout << count << ":" << a.number_of_changes_last_gen << std::endl;
     if (a.number_of_changes_last_gen == 0) { res.second = count+1; return res; }
     rotation += rotation[0];
     rotation = rotation.substr(1);

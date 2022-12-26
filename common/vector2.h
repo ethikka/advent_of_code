@@ -2,6 +2,7 @@
 #define VECTOR2_H
 
 #include <vector>
+#include <set>
 
 struct vector2 {
   vector2(int _x, int _y) { x = _x; y = _y; }

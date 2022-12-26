@@ -26,21 +26,9 @@ void add_rock_to_chamber(std::vector<std::array<char, 7>>& chamber, const Rock& 
 void apply_jet(Rock& rock, char jet, const std::vector<std::array<char, 7>>& chamber) {
   const auto prev = rock;
   switch (jet) {
-    case '>': {
-        for (auto& ele : rock) {
-          ele.x++;
-          if (ele.x > 6) { rock = prev; return; }
-        }
-      }
-      break;
-    case '<': {
-        for (auto& ele : rock) {
-          ele.x--;
-          if (ele.x < 0) { rock = prev; return; }
-        }
-      }
-      break;
-    }
+    case '>': { for (auto& ele : rock) { ele.x++; if (ele.x > 6) { rock = prev; return; }}} break;
+    case '<': { for (auto& ele : rock) { ele.x--; if (ele.x < 0) { rock = prev; return; }}} break;
+  }
   if (intersection(chamber, rock)) rock = prev;
 }
 
@@ -66,7 +54,7 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   int rock_count = 0;
   std::vector<std::array<char, 7>> chamber;
   chamber.push_back({'#','#','#','#','#','#','#'}); // bottom
-  while (rock_count++ < 6025) {
+  while (rock_count++ < 4700) { // why 4700? no more is needed for a stable repeating state ;-) if res.second = 0 then it probably needs a few more for your input
     auto rock = rocks.front_and_next();
     move_to_starting_height(rock, chamber.size());
     auto prev = rock;
@@ -81,16 +69,13 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   }
 
   auto ss = states.at(jets.internal_index()+(rocks.internal_index()*100000));
-  int ROCKCYCLE = ss.back().first;
-  int ROCKHEIGTH = ss.back().second;
+  int ROCKCYCLE(ss.back().first), ROCKHEIGTH(ss.back().second);
   ss.pop_back();
-  ROCKCYCLE -= ss.back().first;
-  ROCKHEIGTH -= ss.back().second;
+  ROCKCYCLE -= ss.back().first; ROCKHEIGTH -= ss.back().second;
 
   int64_t cnt(0), ln(1000000000000);
   while (ln > 5100) { ln -= ROCKHEIGTH; cnt++; }
 
-  // find state with rockcount ln
   for (auto s: states) for (auto ss: s.second) if (ss.second == ln) res.second = (ss.first+(ROCKCYCLE*cnt))-1;
   return res;
 }

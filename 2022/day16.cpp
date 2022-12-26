@@ -1,91 +1,60 @@
-#include <sstream>
-#include <vector>
+#include <iostream>
 #include <map>
-#include <set>
-#include <queue>
-#include <algorithm>
+#include <sstream>
+#include <utility>
+#include <vector>
 #include "../common/lib.h"
 
-struct valve {
-  int index;
-  std::string name;
-  int64_t flowrate;
-  std::vector<std::string> points_to;
-};
+std::vector<int64_t> flowrates;
+std::vector<int64_t> memo;
+std::vector<std::vector<int64_t>> tunnel_map;
 
-struct pw {
-  pw(std::string _cv, int64_t _steps) { cv = _cv; steps = _steps; }
-  std::string cv;
-  int64_t steps;
-};
+int64_t sim(int64_t current_valve, int64_t valve_bitset, int64_t time, int64_t other_players) {
+  if (time == 0) return other_players > 0 ? sim(0,valve_bitset,26,other_players-1) : 0;
+  // key = valve_bitset (57 bits)|current_valve_index|time|part_2
+  auto key = (valve_bitset*flowrates.size()*62) + (current_valve*62) + (time*2) + (other_players);
+  // if the key already exists we can shortcut all the paths and return the value
+  if(memo[key]>=0) return memo[key];
 
-std::map<int,std::map<int,int64_t>> memo;
-
-std::istream &operator>>(std::istream &is, valve &v)
-{
-  std::string in;
-  is >> in >> v.name >> in >> in >> in;
-  v.flowrate = std::stoi(in.substr(5, in.size()-6));
-  is >> in >> in >> in >> in;
-  while (!is.eof()) {
-    is >> in;
-    if (in[in.size()-1] != ',') { v.points_to.push_back(in); return is; }
-    else                          v.points_to.push_back(in.substr(0, in.size()-1));
-  }
-  return is;
+  int64_t ans(0);
+  if(((valve_bitset & (1LL<<current_valve)) == 0) && flowrates[current_valve]>0) ans = std::max(ans, (time-1)*flowrates[current_valve] + sim(current_valve, (valve_bitset | (1LL<<current_valve)), time-1, other_players));
+  for(auto& y : tunnel_map[current_valve]) ans = std::max(ans, sim(y, valve_bitset, time-1, other_players));
+  memo[key] = ans;
+  return ans;
 }
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
-  std::pair<std::uintmax_t,std::uintmax_t> res;
-  std::map<std::string,valve> valves;
-  std::map<int,valve> valves_by_index;
-  std::vector<int> valves_with_flowrate;
-  while (!std::cin.eof()) {
-    valve t;
-    t.index = valves.size()+1;
-    std::cin >> t;
-    valves[t.name] = t;
-    valves_by_index[t.index] = t;
-    if (t.flowrate > 0) valves_with_flowrate.push_back(t.index);
+  std::map<std::string, std::pair<int64_t, std::vector<std::string>>> valves_info;
+  while(!std::cin.eof()) {
+    std::string id;
+    int64_t rate = 0;
+    std::vector<std::string> leads_to;
+
+    std::string in;
+    std::cin >> in >> id >> in >> in >> in; 
+    rate = std::stoi(in.substr(5, in.size()-6));
+    std::cin >> in >> in >> in >> in >> in;
+    while (in[in.size()-1] == ',') { leads_to.push_back(in.substr(0, in.size()-1)); std::cin >> in; }
+    leads_to.push_back(in);
+    valves_info[id] = make_pair(rate, leads_to);
   }
 
-  int paths[valves.size()+1][valves.size()+1];
-  for (int i = 0; i <= valves.size(); i++) for (int j = 0; j <= valves.size(); j++) paths[i][j] = -1;
+  int64_t n = valves_info.size();
+  std::map<std::string, int> valve_index;
+  std::vector<std::string> valves_in_order;
+  int64_t nonzero(0);
 
-  // create most efficient path map
-  for (auto v: valves) {
-    std::queue<pw> q;
-    paths[v.second.index][v.second.index] = 0;
-    q.push({ v.second.name, 0 });
-    while (!q.empty()) {
-      auto w = q.front();
-      q.pop();
-      for (auto p: valves[w.cv].points_to) 
-        if (paths[v.second.index][valves[p].index] == -1 || paths[v.second.index][valves[p].index] > w.steps) {
-          paths[v.second.index][valves[p].index] = paths[valves[p].index][v.second.index] = w.steps+1;
-          q.push({p, w.steps+1});
-        }
-    }
-  }
+  // mark AA as non zero so we don't skip it in the sim
+  for(auto& p : valves_info) if(p.first == "AA")    { nonzero++; valve_index[p.first] = valves_in_order.size(); valves_in_order.push_back(p.first); }
+  for(auto& p : valves_info) if(p.second.first > 0) { nonzero++; valve_index[p.first] = valves_in_order.size(); valves_in_order.push_back(p.first); }
+  for(auto& p : valves_info) if(valve_index.count(p.first)==0) { valve_index[p.first] = valves_in_order.size(); valves_in_order.push_back(p.first); }
 
-  do {
-    int64_t pressure(0), minutes_left(30), cv(valves["AA"].index);
-    for(auto i: valves_with_flowrate) {
-      std::cout << "----------------------------" << std::endl;
-      minutes_left -= (paths[cv][i]+1);
-      if (minutes_left < 0) break;
-      memo[i][minutes_left] = minutes_left*valves_by_index[i].flowrate;
-      pressure += memo[i][minutes_left];
-      cv = i;
-      std::cout << valves_by_index[i].name << " +> " << pressure << " " << minutes_left << std::endl;
-    }
-    if (res.first == 0 || res.first < pressure) {
-      res.first = pressure;
-      std::cout << res.first << std::endl;
+  flowrates = std::vector<int64_t>(n, 0);
+  for(int64_t i=0; i<n; i++) flowrates[i] = valves_info[valves_in_order[i]].first;
 
-    }
-  } while ( std::next_permutation(valves_with_flowrate.begin(), valves_with_flowrate.end()));
-  return res;
+  tunnel_map = std::vector<std::vector<int64_t>>(n, std::vector<int64_t>{});
+  for(int64_t i=0; i<n; i++) for(auto& y : valves_info[valves_in_order[i]].second) tunnel_map[i].push_back(valve_index[y]); 
+
+  memo = std::vector<int64_t>((1L<<nonzero) * n * 62, -1);
+  return { sim(0,0,30,false), sim(0,0,26,true) };
 }
-
-//1552 too low

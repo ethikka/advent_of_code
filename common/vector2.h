@@ -7,9 +7,12 @@ struct vector2 {
   vector2(int _x, int _y) { x = _x; y = _y; }
   int x;
   int y;
+  int64_t manhattanlength() { return abs(x)+abs(y); };
 };
 
 vector2 operator +(const vector2 &lhs, const vector2 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y }; };
+vector2 operator -(const vector2 &lhs, const vector2 &rhs) { return { lhs.x-rhs.x, lhs.y-rhs.y }; };
+vector2 operator *(const vector2 &lhs, int mult) { return { lhs.x*mult, lhs.y*mult }; };
 bool operator ==(const vector2 &lhs, const vector2 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
 bool operator<(const vector2& a, const vector2& b) { if(a.y == b.y) return a.x < b.x; return a.y < b.y; };
 
@@ -25,4 +28,11 @@ std::vector<vector2> lerp(vector2 min, vector2 max, vector2 ignore) {
   return res;
 };
 
+
+std::set<vector2> lerp(vector2 min, vector2 max) {
+  std::set<vector2> res;
+  for (int xx = min.x; xx <= max.x; xx++) 
+  for (int yy = min.y; yy <= max.y; yy++) res.emplace(vector2{xx, yy});
+  return res;
+};
 #endif

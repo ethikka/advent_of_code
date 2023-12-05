@@ -13,18 +13,18 @@ Run each (built) day 10 times and generate a table of best, worst and average ru
 
 ---
 ```
-~/src/advent_of_code> ./time_all.sh
+wartoy@holly:~/src/advent_of_code$ ./time_all.sh 
 
 Running each day 10 times
 
 Day         | Best (µs) | Avg (µs)  | Worst (µs)
 ------------+-----------+-----------+--------------
-1           | 1254      | 1332      | 1421
-2           | 264       | 272       | 298
-3           | 2254      | 2373      | 2518
-4           | 696       | 725       | 784
+1           | 1156      | 1228      | 1249
+2           | 244       | 249       | 259
+3           | 2219      | 2274      | 2382
+5           | 11388     | 11765     | 12356
 ------------+-----------+-----------+--------------
-Totals      | 4468      | 4702      | 5021
+Totals      | 15007     | 15516     | 16246
 
-Total time taken 47 ms
+Total time taken 155 ms
 ```

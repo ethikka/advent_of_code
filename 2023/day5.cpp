@@ -38,6 +38,20 @@ public:
   };
 };
 
+uintmax_t s(std::vector<range> seeds, std::vector<remap> rules[8]) {
+  uintmax_t res(0);
+  for (int i = 0; i < 8; i++) {
+    std::vector<range> tmp;
+    for (auto &s: seeds) {
+      auto n = s.remap(rules[i]);
+      tmp.insert(tmp.end(), n.begin(), n.end());
+    }
+    seeds = tmp;
+  }
+  for(auto s: seeds) if (res == 0 || res > s.start) res = s.start;
+  return res;
+};
+
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::pair<std::uintmax_t,std::uintmax_t> res;
   std::vector<range> seeds_a;
@@ -65,22 +79,5 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     }
   }
 
-  for (int i = 0; i < 8; i++) {
-    std::vector<range> tmp_a, tmp_b;
-    for (auto &s: seeds_a) {
-      auto n = s.remap(remap_rules[i]);
-      tmp_a.insert(tmp_a.end(), n.begin(), n.end());
-    }
-    seeds_a = tmp_a;
-
-    for (auto &s: seeds_b) {
-      auto n = s.remap(remap_rules[i]);
-      tmp_b.insert(tmp_b.end(), n.begin(), n.end());
-    }
-    seeds_b = tmp_b;
-  }
-
-  for(auto s: seeds_a) if (res.first == 0 || res.first > s.start) res.first = s.start;
-  for(auto s: seeds_b) if (res.second == 0 || res.second > s.start) res.second = s.start;
-  return res;
+  return { s(seeds_a, remap_rules), s(seeds_b, remap_rules)};
 }

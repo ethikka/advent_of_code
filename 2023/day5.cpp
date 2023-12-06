@@ -1,7 +1,6 @@
 #include <sstream>
 #include <vector>
 #include <cmath>
-#include <algorithm>
 #include <queue>
 #include "../common/lib.h"
 
@@ -30,6 +29,7 @@ public:
           if (rr.end > r.src_end) q.emplace(range{r.src_end+1, rr.end});
           if (rr.start < r.src_start) q.emplace(range{rr.start, r.src_start-1});
           newranges.push_back(range{std::max(rr.start, r.src_start)+r.offset, (std::min(rr.end, r.src_end)+r.offset)});
+          //newranges.push_back(range{rr.start+r.offset, rr.end+r.offset});
         }
       }
       if (!d) newranges.push_back(rr);
@@ -39,44 +39,35 @@ public:
 };
 
 uintmax_t s(std::vector<range> seeds, std::vector<remap> rules[8]) {
-  uintmax_t res(0);
+  uintmax_t res(999999999999);
   for (int i = 0; i < 8; i++) {
     std::vector<range> tmp;
-    for (auto &s: seeds) {
+    for (auto s: seeds) {
       auto n = s.remap(rules[i]);
-      tmp.insert(tmp.end(), n.begin(), n.end());
+      for(auto nn: n) {
+        tmp.push_back(nn);
+        if (i == 7 && res > nn.start) res = nn.start;
+      }
     }
     seeds = tmp;
   }
-  for(auto s: seeds) if (res == 0 || res > s.start) res = s.start;
   return res;
 };
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
-  std::pair<std::uintmax_t,std::uintmax_t> res;
-  std::vector<range> seeds_a;
-  std::vector<range> seeds_b;
+  std::vector<range> seeds_a, seeds_b;
   std::vector<remap> remap_rules[8];
-  
   std::string line, d;
-  int64_t n1, n2, n3;
-  int idx(-1);
+  int64_t n1, n2, n3, idx(-1);
+
   std::getline(std::cin, line);
   std::istringstream ssl(line);
   ssl >> d;
-  while (ssl >> n1 >> n2) {
-    seeds_a.push_back(range{n1, n1});
-    seeds_a.push_back(range{n2, n2});
-    seeds_b.push_back(range{n1, n1+n2});
-  }
+  while (ssl >> n1 >> n2) { seeds_a.push_back(range{n1, n1}); seeds_a.push_back(range{n2, n2}); seeds_b.push_back(range{n1, n1+n2}); }
 
   while (std::getline(std::cin, line)) {
     if (line.size() == 0) { idx++; std::getline(std::cin, line); } 
-    else {
-      std::istringstream ssl(line);
-      ssl >> n2 >> n1 >> n3;
-      remap_rules[idx].push_back({n1, n1+n3-1, n2-n1});
-    }
+    else { std::istringstream ssl(line); ssl >> n2 >> n1 >> n3; remap_rules[idx].push_back({n1, n1+n3-1, n2-n1}); }
   }
 
   return { s(seeds_a, remap_rules), s(seeds_b, remap_rules)};

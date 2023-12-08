@@ -5,10 +5,7 @@
 
 int64_t test(int64_t t, int64_t d) {
   int64_t res(0);
-  for (int z = 0; z < t; z++) {
-    if (((t-z)*z) > d) 
-      res++;
-  }
+  for (int z = 0; z < t; z++) if (((t-z)*z) > d) res++;
   return res;
 }
 

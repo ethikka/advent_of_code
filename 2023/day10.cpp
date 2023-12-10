@@ -3,7 +3,7 @@
 #include <queue>
 #include <algorithm>
 #include "../common/lib.h"
-#include "../common/2dgrid.h"
+#include "../common/grid2d.h"
 #include "../common/vector2.h"
 
 enum direction { north, east, south, west };
@@ -54,7 +54,7 @@ char hotfix_start(tbb::grid2d<char> grid, vector2 pos) {
   bool n[4];
   for(auto d: {north,east,south,west}) n[d] = (s[d].find(grid.get_element(pos+offsets[d]).second) != std::string::npos);
   std::string rr = "   L |F  J- 7";
-  return rr.substr((n[0]?1:0)+(n[1]?2:0)+(n[2]?4:0)+(n[3]?8:0), 1)[0];
+  return rr.substr(n[0]+n[1]*2+n[2]*4+n[3]*8, 1)[0];
 };
 
 std::pair<std::uintmax_t,std::uintmax_t> solve() {

@@ -16,6 +16,7 @@ vector2 operator -(const vector2 &lhs, const vector2 &rhs) { return { lhs.x-rhs.
 vector2 operator *(const vector2 &lhs, int mult) { return { lhs.x*mult, lhs.y*mult }; };
 bool operator ==(const vector2 &lhs, const vector2 &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
 bool operator<(const vector2& a, const vector2& b) { if(a.y == b.y) return a.x < b.x; return a.y < b.y; };
+bool operator>(const vector2& a, const vector2& b) { if(a.y == b.y) return a.x > b.x; return a.y > b.y; };
 
 namespace std {
   template<> struct std::hash<vector2> { std::size_t operator()(const vector2& k)const { return hash<long long>()(((long long)k.x)^(((long long)k.y)<<32)); }; };

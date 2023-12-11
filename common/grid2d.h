@@ -13,7 +13,9 @@ namespace tbb {
     public:
       int _x;
       int _y;
-      void read() {
+      grid2d() { _x = 0; _y = 0; }
+      void read() { read(char(0)); }
+      void read(char ignore) {
         char inp;
         int x(0), y(0), width(0);
   
@@ -21,7 +23,8 @@ namespace tbb {
           switch(inp) {
             case '\n': width = x; x = 0; y++; break; /*next line*/
             default: 
-              place_element({x++, y}, inp); break;
+              if (ignore == 0 || ignore != inp) place_element({x, y}, inp); 
+              x++; break;
           }
         }
       };
@@ -36,12 +39,23 @@ namespace tbb {
       void print() {
         printf("\033[2J");
         for (auto n: map) 
-          printf("\33[%d;%dH%c", n.first.y+15, n.first.x+15, n.second);
+          printf("\33[%d;%dH%c", n.first.y+5, n.first.x+5, n.second);
         printf("\33[39;49m\n\33[%d;%dH", 190, 0);
         std::cout << std::flush;
       };
       std::map<vector2,V> get_raw() { return map; }
       int64_t count() { return map.size(); }
+
+      void insert_row(int below_row, int amount = 1) { 
+        std::map<vector2,V> newmap;
+        for(auto e: map) newmap[{e.first.x, e.first.y+((e.first.y > below_row)*amount)}] = e.second; 
+        map = newmap;
+      }
+      void insert_col(int right_of_col, int amount = 1) { 
+        std::map<vector2,V> newmap;
+        for(auto e: map) newmap[{e.first.x+((e.first.x > right_of_col)*amount), e.first.y}] = e.second; 
+        map = newmap;
+      }
   };
 }
 

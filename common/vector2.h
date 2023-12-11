@@ -9,6 +9,7 @@ struct vector2 {
   int x;
   int y;
   int64_t manhattanlength() { return abs(x)+abs(y); };
+  std::string to_string() { return "("+std::to_string(x)+","+std::to_string(y)+") "; }
 };
 
 vector2 operator +(const vector2 &lhs, const vector2 &rhs) { return { lhs.x+rhs.x, lhs.y+rhs.y }; };

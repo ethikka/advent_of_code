@@ -21,9 +21,9 @@ namespace tbb {
 
         while (std::cin >> std::noskipws >> inp) {
           switch(inp) {
-            case '\n': width = x; x = 0; y++; break; /*next line*/
-            default:
-              if (ignore == 0 || ignore != inp) place_element({x, y}, inp);
+            case '\n': if (x == 0) return; width = x; x = 0; y++; break; /*next line*/
+            default: 
+              if (ignore == 0 || ignore != inp) place_element({x, y}, inp); 
               x++; break;
           }
         }

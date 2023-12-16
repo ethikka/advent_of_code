@@ -5,9 +5,6 @@
 #include "../common/grid2d.h"
 #include "../common/vector2.h"
 
-enum direction { north, west, south, east };
-vector2 offsets[4] = {{0,-1},{-1,0},{0,1},{1,0}};
-
 class table {
   private:
     tbb::grid2d<char> grid;

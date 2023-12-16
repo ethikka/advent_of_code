@@ -5,6 +5,14 @@
 #include <cmath>
 #include "vector2.h"
 
+enum direction { north, east, south, west };
+vector2 offsets[4] = {{0,-1},{1,0},{0,1},{-1,0}};
+
+std::map<char,std::map<direction,direction>> deflections = {
+  {'\\', {{north,west},{south,east},{west,north},{east,south}}},
+  {'/',  {{north,east},{south,west},{west,south},{east,north}}}
+};
+
 namespace tbb {
   template <class V>
   class grid2d {
@@ -32,6 +40,7 @@ namespace tbb {
       void move_element(vector2 oldkey, vector2 newkey) { if (!has_element(newkey)) { place_element(newkey, get_element(oldkey).second); map.erase({oldkey}); } };
       std::pair<vector2,V> get_element(vector2 key) { if (map.find(key) != map.end()) return {key, map[key]}; return {{0,0},'.'};};
       bool has_element(vector2 key) { return map.find(key) != map.end(); };
+      bool in_bounds(vector2 v) { return ((v.x >= 0 && v.y >= 0 && v.x <= _x && v.y <= _y)); };
       std::vector<vector2> find_elements(V val) {
         std::vector<vector2> res;
         for(auto e: map) if (map[e.first] == val) res.push_back(e.first);

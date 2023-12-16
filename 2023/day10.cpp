@@ -6,9 +6,6 @@
 #include "../common/grid2d.h"
 #include "../common/vector2.h"
 
-enum direction { north, east, south, west };
-vector2 offsets[4] = {{0,-1},{1,0},{0,1},{-1,0}};
-
 std::vector<vector2> loops(tbb::grid2d<char> grid, vector2 pos, direction d) {
   std::vector<vector2> loop;
   do {

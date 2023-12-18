@@ -1,3 +1,6 @@
+#ifndef CIRCULARLIST_H
+#define CIRCULARLIST_H
+
 #include <vector>
 
 namespace tbb {
@@ -16,3 +19,5 @@ namespace tbb {
       int internal_index() { return head; }
   };
 }
+
+#endif

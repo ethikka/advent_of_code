@@ -38,7 +38,7 @@ int64_t calc_area(tbb::grid2d<char> grid) {
         char c = grid.get_element({x, y}).second;
         switch (c) {
           case '|': ++parity; break;
-          case 'F': 
+          case 'F':
           case 'L': enterPipe = c; break;
           case '7': parity += (enterPipe == 'L'); break;
           case 'J': parity += (enterPipe == 'F'); break;

@@ -22,10 +22,10 @@ class camelcard_hand {
     std::string cards, sub_cards;
     hand_type type;
     bool wildcard_hand;
-    camelcard_hand(std::string input, bool wildcard) { 
-        cards = input; 
+    camelcard_hand(std::string input, bool wildcard) {
+        cards = input;
         wildcard_hand = wildcard;
-        type = get_type(cards); 
+        type = get_type(cards);
         if (wildcard) {
             std::map<char,int> freq;
             std::string remaining(cards);

@@ -6,7 +6,7 @@ class sequencer {
   private:
     std::vector<std::vector<int64_t>> subsequences;
   public:
-    sequencer(std::istringstream inp) { 
+    sequencer(std::istringstream inp) {
       int64_t i, d, t; std::vector<int64_t> ss; bool all_zero;
 
       subsequences.push_back({});

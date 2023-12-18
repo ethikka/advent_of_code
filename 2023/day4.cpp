@@ -16,7 +16,7 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     int score(0), num;
     std::set<int> numbers;
     ssl.ignore(10);
-    std::copy_n(std::istream_iterator<int>(ssl), 10, std::inserter(numbers, numbers.begin()));    
+    std::copy_n(std::istream_iterator<int>(ssl), 10, std::inserter(numbers, numbers.begin()));
     ssl.ignore(3);
 
     stackssize[counter] = std::max(1, stackssize[++counter]+1);
@@ -24,7 +24,7 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
     int wins(0);
     while (ssl >> num) {
         if (numbers.count(num) > 0) {
-            stackssize[counter+wins] = std::max(stackssize[counter], stackssize[++wins+counter]+stackssize[counter]);
+            stackssize[counter+wins] = std::max(stackssize[counter], stackssize[counter+ ++wins]+stackssize[counter]);
             score = std::max(1, score*2);
         }
     }

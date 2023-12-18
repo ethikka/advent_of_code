@@ -40,18 +40,18 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   // make a list of in range numbers per symbol
   for(auto &nn: numbers) {
     int minx(nn.x-1), maxx(nn.x+std::to_string(nn.content).length()), miny(nn.y-1), maxy(nn.y+1);
-    for (auto &ss: symbols) 
+    for (auto &ss: symbols)
       if (ss.x >= minx && ss.x <= maxx && ss.y >= miny && ss.y <= maxy) {
         ss.in_range.push_back(nn.content);
         nn.in_range.push_back(ss.content);
       }
   }
 
-  for (auto nn: numbers) 
+  for (auto nn: numbers)
     if (nn.in_range.size() > 0)
       res.first += nn.content;
-  
-  for (auto ss: symbols) 
+
+  for (auto ss: symbols)
     if (ss.in_range.size() == 2 && ss.content == '*')
       res.second += ss.in_range.front()*ss.in_range.back();
 

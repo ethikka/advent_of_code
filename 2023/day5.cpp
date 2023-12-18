@@ -24,7 +24,7 @@ public:
       bool d(false);
       for(auto r: rules) {
         if (!(r.src_end < rr.start || r.src_start > rr.end))
-        { 
+        {
           d |= true;
           if (rr.end > r.src_end) q.emplace(range{r.src_end+1, rr.end});
           if (rr.start < r.src_start) q.emplace(range{rr.start, r.src_start-1});
@@ -66,7 +66,7 @@ std::pair<std::uintmax_t,std::uintmax_t> solve() {
   while (ssl >> n1 >> n2) { seeds_a.push_back(range{n1, n1}); seeds_a.push_back(range{n2, n2}); seeds_b.push_back(range{n1, n1+n2}); }
 
   while (std::getline(std::cin, line)) {
-    if (line.size() == 0) { idx++; std::getline(std::cin, line); } 
+    if (line.size() == 0) { idx++; std::getline(std::cin, line); }
     else { std::istringstream ssl(line); ssl >> n2 >> n1 >> n3; remap_rules[idx].push_back({n1, n1+n3-1, n2-n1}); }
   }
 

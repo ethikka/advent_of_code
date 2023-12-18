@@ -1,5 +1,5 @@
 #include <sstream>
-#include <vector> 
+#include <vector>
 #include <algorithm>
 #include "../common/lib.h"
 

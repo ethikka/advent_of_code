@@ -18,7 +18,7 @@ int find_num(std::string input, bool including_nums, bool first) {
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
   std::pair<std::uintmax_t,std::uintmax_t> res;
   std::string line;
-  while (!std::cin.eof()) { 
+  while (!std::cin.eof()) {
     std::getline(std::cin, line);
     res.first += (find_num(line, false, true)*10)+find_num(line, false, false);
     res.second += (find_num(line, true, true)*10)+find_num(line, true, false);

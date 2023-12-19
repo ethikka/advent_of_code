@@ -16,7 +16,7 @@ then
 fi
 
 file="./buildoutput/d$year$day.out"
-inputfile="./$year/input.day$day"
+inputfile="./inputs/$year/input.day$day"
 cppfile="./$year/day$day.cpp"
 key="$year $day"
 optsfile="ExtraOpts.txt"

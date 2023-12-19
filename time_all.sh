@@ -27,7 +27,7 @@ do
   subt=0
   total=0
   file="./buildoutput/d$year$day.out"
-  inputfile="./$year/input.day$day"
+  inputfile="./inputs/$year/input.day$day"
   if [ -f $file ]
   then
     for cnt in $( eval echo {1..$runs} )

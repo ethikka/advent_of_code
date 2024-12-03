@@ -28,7 +28,7 @@ std::uintmax_t energized_tiles(tbb::grid2d<char> g, vector2 v, direction d) {
         char c = g.get_element(w.pos).second;
         switch(c) {
           case '|' : if (w.dir == east  || w.dir == west)  {q.emplace(work{w.pos+offsets[north],north}); q.emplace(work{w.pos+offsets[south],south}); } else q.emplace(work{w.pos+offsets[w.dir],w.dir}); break;
-          case '-' : if (w.dir == north || w.dir == south) {q.emplace(work{w.pos+offsets[east],east});  q.emplace(work{w.pos+offsets[west],west});  } else q.emplace(work{w.pos+offsets[w.dir],w.dir}); break;
+          case '-' : if (w.dir == north || w.dir == south) {q.emplace(work{w.pos+offsets[east],east});   q.emplace(work{w.pos+offsets[west],west});   } else q.emplace(work{w.pos+offsets[w.dir],w.dir}); break;
           default:
             q.emplace(work{w.pos+offsets[deflections[c][w.dir]],deflections[c][w.dir]});
         }

@@ -7,6 +7,7 @@
 
 enum direction { north, east, south, west, none };
 vector2<int> offsets[4] = {{0,-1},{1,0},{0,1},{-1,0}};
+vector2<int> diagonals[8] = {{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1}};
 std::string dir_from = "v<^>";
 std::string dir_to = "^>v<";
 

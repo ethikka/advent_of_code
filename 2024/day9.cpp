@@ -21,26 +21,24 @@ int64_t crc(std::string input, bool part_b) {
     }
 
     for (int64_t i = map.size() - 1; i >= 0; i--) {
-        FileInfo& info = map[i];
-        if (info.id == -1) continue;
+        if (map[i].id == -1) continue;
 
         for (size_t j = 0; j < i; j++) {
-            FileInfo& space = map[j];
-            if (space.id != -1 || (part_b && space.blocks < info.blocks))
+            if (map[j].id != -1 || (part_b && map[j].blocks < map[i].blocks))
                 continue;
 
-            if (space.blocks == info.blocks)
-                std::swap(info, space);
-            else if (space.blocks > info.blocks) {
-                int blocksLeft = space.blocks - info.blocks;
-                space.blocks = info.blocks;
-                std::swap(info, space);
+            if (map[j].blocks == map[i].blocks)
+                std::swap(map[i], map[j]);
+            else if (map[j].blocks > map[i].blocks) {
+                int blocksLeft = map[j].blocks - map[i].blocks;
+                map[j].blocks = map[i].blocks;
+                std::swap(map[i], map[j]);
                 map.insert(map.begin() + j + 1, {-1, blocksLeft});
             } else if (!part_b) {
-                int blocksLeft = info.blocks - space.blocks;
-                info.blocks = space.blocks;
-                std::swap(info, space);
-                map.insert(map.begin() + i, {space.id, blocksLeft});
+                int blocksLeft = map[i].blocks - map[j].blocks;
+                map[i].blocks = map[j].blocks;
+                std::swap(map[i], map[j]);
+                map.insert(map.begin() + i, {map[j].id, blocksLeft});
                 i++;
             }
             break;

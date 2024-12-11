@@ -1,6 +1,7 @@
 #ifndef GRID2D_H
 #define GRID2D_H
 
+#include <iostream>
 #include <map>
 #include <cmath>
 

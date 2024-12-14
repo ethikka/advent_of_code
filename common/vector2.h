@@ -7,6 +7,11 @@
 
 template <class T>
 struct vector2 {
+    vector2(std::string inp) {
+        int pos = inp.find(',');
+        x = std::stoi(inp.substr(0, pos));
+        y = std::stoi(inp.substr(pos + 1));
+    }
     vector2(T _x, T _y) {
         x = _x;
         y = _y;
@@ -14,7 +19,7 @@ struct vector2 {
     T x;
     T y;
     T manhattanlength() { return abs(x) + abs(y); };
-    std::string to_string() { return "(" + std::to_string(x) + "," + std::to_string(y) + ") "; }
+    std::string to_string() { return "(" + std::to_string(x) + "," + std::to_string(y) + ")"; }
 };
 
 template <class T>
@@ -23,6 +28,9 @@ template <class T>
 vector2<T> operator-(const vector2<T> &lhs, const vector2<T> &rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y}; };
 template <class T>
 vector2<T> operator*(const vector2<T> &lhs, int mult) { return {lhs.x * mult, lhs.y * mult}; };
+template <class T>
+vector2<T> operator%(const vector2<T> &lhs, const vector2<T> &rhs) { return {lhs.x % rhs.x, lhs.y % rhs.y}; };
+
 template <class T>
 bool operator==(const vector2<T> &lhs, const vector2<T> &rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
 template <class T>

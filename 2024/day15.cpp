@@ -39,7 +39,7 @@ int64_t solve_a(tbb::grid2d<char> grid, std::vector<std::string> instructions) {
     return res;
 }
 
-std::pair<std::set<vector2<int>>, bool> get_move_list(tbb::grid2d<char> grid, vector2<int> start_pos, vector2<int> offset, bool first) {
+std::pair<std::set<vector2<int>>, bool> get_move_list(tbb::grid2d<char> grid, vector2<int> start_pos, vector2<int> offset) {
     std::set<vector2<int>> nodes;
     // clang-format off
     switch (grid[start_pos + offset].second) {
@@ -51,7 +51,7 @@ std::pair<std::set<vector2<int>>, bool> get_move_list(tbb::grid2d<char> grid, ve
     // clang-format on
     nodes.emplace(start_pos + offset);
     for (auto n : nodes) {
-        auto rr = get_move_list(grid, n, offset, false);
+        auto rr = get_move_list(grid, n, offset);
         if (!rr.second) return {nodes, false};
         for (auto rn : rr.first) nodes.emplace(rn);
     }
@@ -86,7 +86,7 @@ int64_t solve_b(tbb::grid2d<char> ogrid, std::vector<std::string> instructions) 
                     switch (m) {
                         case '^':
                         case 'v': {
-                            auto r = get_move_list(grid, pos, o, true);
+                            auto r = get_move_list(grid, pos, o);
                             if (r.second) {
                                 std::map<vector2<int>, char> oldvalues;
                                 for (auto p : r.first) { oldvalues[p] = grid[p].second; grid.remove_element(p); }

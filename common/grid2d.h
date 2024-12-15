@@ -83,6 +83,10 @@ class grid2d {
         }
     };
     void remove_element(vector2<int> key) { map.erase(key); };
+    void wipe_elements(V val) {
+        for (auto e : find_elements(val)) remove_element(e);
+    }
+
     void place_element(vector2<int> key, V v) {
         map[key] = v;
     };
@@ -123,6 +127,10 @@ class grid2d {
         std::map<vector2<int>, V> newmap;
         for (auto e : map) newmap[{e.first.x + ((e.first.x > right_of_col) * amount), e.first.y}] = e.second;
         map = newmap;
+    }
+
+    std::pair<vector2<int>, V> operator[](vector2<int> index) {
+        return get_element(index);
     }
 };
 }  // namespace tbb

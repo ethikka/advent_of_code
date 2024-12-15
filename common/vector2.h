@@ -7,6 +7,10 @@
 
 template <class T>
 struct vector2 {
+    vector2() {
+        x = 0;
+        y = 0;
+    }
     vector2(std::string inp) {
         int pos = inp.find(',');
         x = std::stoi(inp.substr(0, pos));
@@ -43,6 +47,8 @@ bool operator>(const vector2<T> &a, const vector2<T> &b) {
     if (a.y == b.y) return a.x > b.x;
     return a.y > b.y;
 };
+template <class T>
+bool operator!=(const vector2<T> &lhs, const vector2<T> &rhs) { return !(lhs.x == rhs.x && lhs.y == rhs.y); };
 
 namespace std {
 template <class T>

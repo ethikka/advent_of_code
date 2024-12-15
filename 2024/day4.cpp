@@ -2,9 +2,8 @@
 #include "../common/lib.h"
 #include "../common/grid2d.h"
 
-tbb::grid2d<char> grid, ng;
+tbb::grid2d<char> grid;
 
-bool c(vector2<int> pos, char c) { return (grid.get_element(pos).second == c); }
 bool co(vector2<int> pos, vector2<int> os) { 
   char cc[2];
   cc[0] = grid.get_element(pos+os).second;
@@ -12,22 +11,10 @@ bool co(vector2<int> pos, vector2<int> os) {
   return ((cc[0] == 'M' && cc[1] == 'S') || (cc[1] == 'M' && cc[0] == 'S'));
 }
 
-int find_xmas(vector2<int> pos) {
-  int r = 0;
-  for(auto d: diagonals) if (c(pos+d,'M') && c(pos+(d*2),'A') && c(pos+(d*3),'S')) r++;
-  return r;
-};
-
-int find_mas(vector2<int> pos) {
-    int r = 0;
-    if (co(pos, diagonals[1]) && co(pos, diagonals[3])) r++;
-    return r;
-};
-
 std::pair<std::uintmax_t,std::uintmax_t> solve() {
     std::pair<std::uintmax_t,std::uintmax_t> res;
     grid.read();
-    for(auto e: grid.find_elements('X')) res.first += find_xmas(e);
-    for(auto e: grid.find_elements('A')) res.second += find_mas(e);
+    for(auto e: grid.find_elements('X')) for(auto d: diagonals) if (grid.test_element(e+d, 'M') && grid.test_element(e+(d*2), 'A') && grid.test_element(e+(d*3), 'S')) res.first++;
+    for(auto e: grid.find_elements('A')) if (co(e, diagonals[1]) && co(e, diagonals[3])) res.second++;
     return res;
 }

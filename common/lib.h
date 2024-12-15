@@ -20,7 +20,6 @@ void output_current_timer() {
   std::cout << std::fixed << std::setprecision(3) << (std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start_time).count())/1000.0f << "µs" << std::endl;
 }
 
-
 void post_solve(std::pair<std::uintmax_t,std::uintmax_t> res) {
   if (output_for_timing)
     std::cout << (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start_time).count());

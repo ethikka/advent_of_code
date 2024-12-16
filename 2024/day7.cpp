@@ -27,7 +27,8 @@ class elephant_math {
                 res = (res - numbers[curr_idx]) * numbers[curr_idx];
                 if (!bt2(res, curr_idx + 1)) {
                     res /= numbers[curr_idx];
-                    std::string cat = std::to_string(res) + std::to_string(numbers[curr_idx]);
+                    std::string cat =
+                        std::to_string(res) + std::to_string(numbers[curr_idx]);
                     if (cat.length() < 20) {
                         res = stoll(cat);
                         if (!bt2(res, curr_idx + 1)) return 0;
@@ -61,7 +62,8 @@ std::pair<std::uintmax_t, std::uintmax_t> solve() {
     std::string line;
 
     std::vector<elephant_math> equations;
-    while (std::getline(std::cin, line)) equations.push_back(elephant_math(line));
+    while (std::getline(std::cin, line))
+        equations.push_back(elephant_math(line));
     for (auto e : equations) {
         res.first += e.can_solve_a();
         res.second += e.can_solve_b();
@@ -69,6 +71,3 @@ std::pair<std::uintmax_t, std::uintmax_t> solve() {
 
     return res;
 }
-
-// 1430271835320
-// 1430269153186

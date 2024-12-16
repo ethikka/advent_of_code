@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <cmath>
+#include <set>
 
 #include "vector2.h"
 
@@ -18,6 +19,8 @@ std::string dir_from = "v<^>";
 std::string dir_to = "^>v<";
 
 direction rev_dir(direction d) { return (direction)((d + 2) % 4); };
+direction cw(direction d) { return (direction)((d + 1) % 4); };
+direction ccw(direction d) { return (direction)((d + 3) % 4); };
 
 std::vector<direction> all_but(direction dir) {
     switch (dir) {
@@ -38,10 +41,14 @@ template <typename V>
 V to_v(char c);
 
 template <>
-int to_v(char c) { return (c - '0'); };
+int to_v(char c) {
+    return (c - '0');
+};
 
 template <>
-char to_v(char c) { return c; };
+char to_v(char c) {
+    return c;
+};
 
 std::map<char, std::map<direction, direction>> deflections = {
     {'\\', {{north, west}, {south, east}, {west, north}, {east, south}}},
@@ -74,7 +81,8 @@ class grid2d {
                     y++;
                     break; /*next line*/
                 default:
-                    if (ignore == 0 || ignore != inp) place_element({x, y}, to_v<V>(inp));
+                    if (ignore == 0 || ignore != inp)
+                        place_element({x, y}, to_v<V>(inp));
                     _x = std::max(_x, x);
                     _y = std::max(_y, y);
                     x++;
@@ -87,9 +95,7 @@ class grid2d {
         for (auto e : find_elements(val)) remove_element(e);
     }
 
-    void place_element(vector2<int> key, V v) {
-        map[key] = v;
-    };
+    void place_element(vector2<int> key, V v) { map[key] = v; };
     void move_element(vector2<int> oldkey, vector2<int> newkey) {
         if (!has_element(newkey)) {
             place_element(newkey, get_element(oldkey).second);
@@ -101,31 +107,46 @@ class grid2d {
         return {{0, 0}, '.'};
     };
     bool has_element(vector2<int> key) { return map.find(key) != map.end(); };
-    bool in_bounds(vector2<int> v) { return ((v.x >= 0 && v.y >= 0 && v.x <= _x && v.y <= _y)); };
+    bool in_bounds(vector2<int> v) {
+        return ((v.x >= 0 && v.y >= 0 && v.x <= _x && v.y <= _y));
+    };
+
+    std::set<V> get_unique_values() {
+        std::set<V> res;
+        for (auto e : map) res.emplace(map[e.first]);
+        return res;
+    }
+
     std::vector<vector2<int>> find_elements(V val) {
         std::vector<vector2<int>> res;
         for (auto e : map)
             if (map[e.first] == val) res.push_back(e.first);
         return res;
     };
+
     void print() {
         printf("\033[2J");
         for (auto n : map)
-            printf("\33[%d;%dH%c", n.first.y + 5, n.first.x + 5, n.second);
+            printf("\33[%d;%dH%c", n.first.y + 1, n.first.x + 1, n.second);
         printf("\33[39;49m\n\33[%d;%dH", 190, 0);
         std::cout << std::flush;
     };
+
     std::map<vector2<int>, V> get_raw() { return map; }
     int64_t count() { return map.size(); }
 
     void insert_row(int below_row, int amount = 1) {
         std::map<vector2<int>, V> newmap;
-        for (auto e : map) newmap[{e.first.x, e.first.y + ((e.first.y > below_row) * amount)}] = e.second;
+        for (auto e : map)
+            newmap[{e.first.x,
+                    e.first.y + ((e.first.y > below_row) * amount)}] = e.second;
         map = newmap;
     }
     void insert_col(int right_of_col, int amount = 1) {
         std::map<vector2<int>, V> newmap;
-        for (auto e : map) newmap[{e.first.x + ((e.first.x > right_of_col) * amount), e.first.y}] = e.second;
+        for (auto e : map)
+            newmap[{e.first.x + ((e.first.x > right_of_col) * amount),
+                    e.first.y}] = e.second;
         map = newmap;
     }
 

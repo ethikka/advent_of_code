@@ -49,7 +49,7 @@ class vm {
         }
         for (int i = 0; i < output.size(); i++) outputstr = outputstr + (i == 0? "": ",") + (char)(output.at(i)+'0');
         if (part_a) std::cout << outputstr << std::endl;
-        if (instructions.ends_with(outputstr)) return outputstr;
+        if (!part_a && instructions.ends_with(outputstr)) return outputstr;
         return "";
     }
 };

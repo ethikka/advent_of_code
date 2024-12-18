@@ -19,7 +19,7 @@ struct work {
 
 int64_t path(std::vector<vector2<int>> bytes, int size, int number) {
     tbb::grid2d<char> g;
-    for (int i = 0; i < number; i++) g.place_element(bytes.at(i) + vector2<int>(1, 1), '#');
+    for (int i = 0; i <= number; i++) g.place_element(bytes.at(i) + vector2<int>(1, 1), '#');
     for (int i = -1; i <= size; i++)
         for (auto a : std::vector<vector2<int>>{{i + 1, 0}, {0, i + 1}, {i + 1, size + 1}, {size + 1, i + 1}}) g.place_element(a, '#');
     std::queue<work> path;
@@ -54,7 +54,7 @@ std::pair<std::uintmax_t, std::uintmax_t> solve() {
         if (path(bytes, 71, i) == 0) {
             if (path(bytes, 71, i) == 0) {
                 if (!output_for_timing)
-                    std::cout << "Part b " << bytes.at(i - 1).to_string() << std::endl;
+                    std::cout << "Part b " << bytes.at(i).to_string() << std::endl;
                 return {path(bytes, 71, 1024), 0};
             }
         }

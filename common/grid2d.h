@@ -95,7 +95,11 @@ class grid2d {
         for (auto e : find_elements(val)) remove_element(e);
     }
 
-    void place_element(vector2<int> key, V v) { map[key] = v; };
+    void place_element(vector2<int> key, V v) {
+        map[key] = v;
+        _x = std::max(_x, key.x);
+        _y = std::max(_y, key.y);
+    };
     void move_element(vector2<int> oldkey, vector2<int> newkey) {
         if (!has_element(newkey)) {
             place_element(newkey, get_element(oldkey).second);

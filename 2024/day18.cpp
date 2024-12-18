@@ -8,8 +8,6 @@
 #include "../common/vector2.h"
 #include "../common/lib.h"
 
-vector2<int> end;
-
 struct work {
     vector2<int> pos;
     int64_t score;
@@ -18,14 +16,13 @@ struct work {
 };
 
 int64_t path(std::vector<vector2<int>> bytes, int size, int number) {
+    vector2<int> end = {size - 1, size - 1};
     tbb::grid2d<char> g;
-    for (int i = 0; i <= number; i++) g.place_element(bytes.at(i) + vector2<int>(1, 1), '#');
-    for (int i = -1; i <= size; i++)
-        for (auto a : std::vector<vector2<int>>{{i + 1, 0}, {0, i + 1}, {i + 1, size + 1}, {size + 1, i + 1}}) g.place_element(a, '#');
+    for (int i = 0; i <= number; i++) g.place_element(bytes.at(i), '#');
     std::queue<work> path;
     std::map<vector2<int>, int64_t> visited;
     std::vector<vector2<int>> best_path;
-    path.push({{1, 1}, 0});
+    path.push({{0, 0}, 0});
     while (!path.empty()) {
         work w = path.front();
         path.pop();
@@ -49,15 +46,17 @@ std::pair<std::uintmax_t, std::uintmax_t> solve() {
     int x, y;
     std::vector<vector2<int>> bytes;
     while (std::cin >> x >> c >> y) bytes.push_back(vector2<int>(x, y));
-    end = {70 + 1, 70 + 1};
-    for (int i = 1025; i < bytes.size(); i++) {
-        if (path(bytes, 71, i) == 0) {
-            if (path(bytes, 71, i) == 0) {
-                if (!output_for_timing)
-                    std::cout << "Part b " << bytes.at(i).to_string() << std::endl;
-                return {path(bytes, 71, 1024), 0};
-            }
+    std::map<int, int64_t> steps;
+    int st(1024), mul(2048);
+    while (true) {
+        steps[st] = path(bytes, 71, st);
+        mul /= 2;
+        st += (mul * (steps[st] > 0 ? 1 : -1));
+        if (steps.find(st) != steps.end()) {
+            if (steps[st] == 0) std::cout << "Part b " << bytes.at(st).to_string() << std::endl;
+            if (steps[st + 1] == 0) std::cout << "Part b " << bytes.at(st + 1).to_string() << std::endl;
+            return {steps[1024], 0};
         }
-    }
+    };
     return {0, 0};
 }

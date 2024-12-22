@@ -23,7 +23,7 @@ struct vector2 {
     T x;
     T y;
     T manhattanlength() { return abs(x) + abs(y); };
-    std::string to_string() { return "(" + std::to_string(x) + "," + std::to_string(y) + ")"; }
+    std::string to_string() const { return "(" + std::to_string(x) + "," + std::to_string(y) + ")"; }
 };
 
 template <class T>

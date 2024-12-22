@@ -5,6 +5,7 @@
 #include <map>
 #include <cmath>
 #include <set>
+#include <queue>
 
 #include "vector2.h"
 
@@ -17,6 +18,12 @@ vector2<int> offsets[4] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 vector2<int> diagonals[8] = {{0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}};
 std::string dir_from = "v<^>";
 std::string dir_to = "^>v<";
+
+char offset_to_char(vector2<int> inp) {
+    for (int i = 0; i < 4; i++)
+        if (offsets[i] == inp) return dir_to[i];
+    return 'X';
+};
 
 direction rev_dir(direction d) { return (direction)((d + 2) % 4); };
 direction cw(direction d) { return (direction)((d + 1) % 4); };
@@ -53,6 +60,13 @@ char to_v(char c) {
 std::map<char, std::map<direction, direction>> deflections = {
     {'\\', {{north, west}, {south, east}, {west, north}, {east, south}}},
     {'/', {{north, east}, {south, west}, {west, south}, {east, north}}}};
+
+struct shortest_path_work {
+    vector2<int> pos;
+    int64_t score;
+    std::vector<vector2<int>> history;
+    bool operator<(const shortest_path_work &compare_to) const { return score < compare_to.score; }
+};
 
 namespace tbb {
 template <class V>
@@ -126,6 +140,47 @@ class grid2d {
         for (auto e : map)
             if (map[e.first] == val) res.push_back(e.first);
         return res;
+    };
+
+    std::map<vector2<int>, int64_t> floodfill(vector2<int> s) {
+        std::queue<shortest_path_work> path;
+        std::map<vector2<int>, int64_t> visited;
+        path.push({s, 0});
+        while (!path.empty()) {
+            shortest_path_work w = path.front();
+            path.pop();
+            w.history.push_back(w.pos);
+            if (w.score < visited[w.pos] || visited[w.pos] == 0) {
+                visited[w.pos] = w.score;
+                for (auto o : offsets)
+                    if (in_bounds(w.pos + o) && (map[w.pos + o] != '#'))
+                        path.push({w.pos + o, w.score + 1, w.history});
+            }
+        }
+        return visited;
+    };
+
+    std::vector<vector2<int>> shortest_path(vector2<int> s, vector2<int> e) {
+        std::queue<shortest_path_work> path;
+        std::map<vector2<int>, int64_t> visited;
+        std::vector<vector2<int>> best_path;
+        path.push({s, 0});
+        while (!path.empty()) {
+            shortest_path_work w = path.front();
+            path.pop();
+            w.history.push_back(w.pos);
+            if (w.score < visited[w.pos] || visited[w.pos] == 0) {
+                if (w.pos == e) {
+                    best_path.clear();
+                    for (auto e : w.history) best_path.push_back(e);
+                }
+                visited[w.pos] = w.score;
+                for (auto o : offsets)
+                    if (in_bounds(w.pos + o) && (map[w.pos + o] != '#'))
+                        path.push({w.pos + o, w.score + 1, w.history});
+            }
+        }
+        return best_path;
     };
 
     void print() {

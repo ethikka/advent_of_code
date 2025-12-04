@@ -65,7 +65,7 @@ struct shortest_path_work {
     vector2<int> pos;
     int64_t score;
     std::vector<vector2<int>> history;
-    bool operator<(const shortest_path_work &compare_to) const { return score < compare_to.score; }
+    bool operator<(const shortest_path_work& compare_to) const { return score < compare_to.score; }
 };
 
 namespace tbb {
@@ -80,6 +80,11 @@ class grid2d {
     grid2d() {
         _x = 0;
         _y = 0;
+    }
+    grid2d(char ignorechar) {
+        _x = 0;
+        _y = 0;
+        read(ignorechar);
     }
     void read() { read(char(0)); }
     void read(char ignore) {
